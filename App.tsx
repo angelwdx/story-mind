@@ -1481,7 +1481,7 @@ export default function App() {
                             disabled={!inputs.topic.trim()}
                             className="px-12 py-4 bg-black text-white font-bold rounded-full hover:shadow-xl hover:scale-105 transition-all disabled:opacity-50 disabled:hover:scale-100 flex items-center text-lg tracking-wide"
                         >
-                            Next: Generate Architecture <ArrowRight size={20} className="ml-2" />
+                            下一步：生成核心架构 <ArrowRight size={20} className="ml-2" />
                         </button>
                     </div>
                 </div>
