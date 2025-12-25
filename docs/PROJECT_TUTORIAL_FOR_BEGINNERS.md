@@ -36,7 +36,7 @@
 让我们来看看这个项目的文件结构，了解每个文件和目录的作用：
 
 ```
-d:\build\uncle_cat/
+d:\build\story-mind/
 ├── build/              # 构建输出目录（隐藏提示词版本）
 ├── components/         # React组件目录
 │   ├── CustomAlert.tsx
@@ -145,7 +145,7 @@ d:\build\uncle_cat/
 
 1. 打开命令行工具，进入项目目录：
    ```bash
-   cd d:\build\uncle_cat
+   cd d:\build\story-mind
    ```
 2. 运行安装命令：
    ```bash
