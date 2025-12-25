@@ -749,7 +749,7 @@ ${currentChapter.content}
 
                 {/* Right Tools Panel - Mobile Responsive */}
                 <div className={`
-                    w-full lg:w-80 bg-stone-900 border-l border-stone-800 flex flex-col shrink-0 h-full
+                    w-full lg:w-80 bg-white border-l border-gray-100 flex flex-col shrink-0 h-full
                     lg:flex
                     fixed lg:relative
                     top-0 right-0 z-20
@@ -757,16 +757,16 @@ ${currentChapter.content}
                     ${isRightPanelOpen ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'}
                 `}>
                     {/* Theme Recommendation */}
-                    <div className="flex flex-col max-h-[40%] min-h-0 border-b border-stone-800">
-                        <div className="p-4 border-b border-stone-800 shrink-0 bg-stone-900 sticky top-0 z-10 flex justify-between items-center">
-                            <h3 className="text-xs font-bold text-stone-400 uppercase flex items-center">
+                    <div className="flex flex-col max-h-[40%] min-h-0 border-b border-gray-100">
+                        <div className="p-4 border-b border-gray-100 shrink-0 bg-white sticky top-0 z-10 flex justify-between items-center">
+                            <h3 className="text-xs font-bold text-gray-400 uppercase flex items-center">
                                 <Sparkles size={14} className="mr-2 text-amber-500" /> 题材公式推荐
                             </h3>
                             <div className="flex space-x-2">
                                 {!__HIDE_PROMPT_MANAGEMENT__ && (
                                     <button
                                         onClick={() => onEditPrompt('THEME_MATCH_PROMPT')}
-                                        className="text-stone-600 hover:text-white transition-colors"
+                                        className="text-gray-400 hover:text-gray-900 transition-colors"
                                         title="查看/编辑题材匹配提示词"
                                     >
                                         <FileText size={12} />
@@ -775,7 +775,7 @@ ${currentChapter.content}
                                 {/* Mobile Close Button */}
                                 <button
                                     onClick={() => setIsRightPanelOpen(false)}
-                                    className="text-stone-600 hover:text-white transition-colors lg:hidden"
+                                    className="text-gray-400 hover:text-gray-900 transition-colors lg:hidden"
                                     title="关闭工具面板"
                                 >
                                     <X size={14} />
@@ -784,24 +784,24 @@ ${currentChapter.content}
                         </div>
                         <div className="overflow-y-auto p-4 space-y-2 custom-scrollbar">
                             {isThemeGenerating ? (
-                                <div className="text-xs text-stone-500 animate-pulse">正在分析剧情匹配题材...</div>
+                                <div className="text-xs text-gray-500 animate-pulse">正在分析剧情匹配题材...</div>
                             ) : matchedThemes.length > 0 ? (
                                 matchedThemes.map((theme) => (
                                     <div
                                         key={theme.code}
                                         onClick={() => onUpdateSelectedTheme(selectedTheme?.code === theme.code ? null : theme)}
                                         className={`p-3 rounded-lg border cursor-pointer transition-all text-xs ${selectedTheme?.code === theme.code
-                                            ? 'bg-orange-900/30 border-orange-500 shadow-sm shadow-orange-500/20'
-                                            : 'bg-stone-800/50 border-stone-700 hover:bg-stone-800 hover:border-stone-600'
+                                            ? 'bg-orange-50 border-orange-200 shadow-sm'
+                                            : 'bg-white border-gray-200 hover:bg-gray-50 hover:border-gray-300'
                                             }`}
                                     >
                                         <div className="flex justify-between items-start mb-2">
-                                            <span className={`font-bold ${selectedTheme?.code === theme.code ? 'text-orange-300' : 'text-stone-300'}`}>
+                                            <span className={`font-bold ${selectedTheme?.code === theme.code ? 'text-orange-700' : 'text-gray-900'}`}>
                                                 {theme.name}
                                             </span>
                                             {renderRecBadge(theme.level)}
                                         </div>
-                                        <p className="text-stone-400 leading-relaxed mb-2">{theme.desc}</p>
+                                        <p className="text-gray-500 leading-relaxed mb-2">{theme.desc}</p>
 
                                         {selectedTheme?.code === theme.code && (
                                             <button
@@ -811,7 +811,7 @@ ${currentChapter.content}
                                                     onGenerate(viewChapter, params, theme);
                                                 }}
                                                 disabled={isGenerating}
-                                                className={`w-full py-1.5 bg-orange-600 hover:bg-orange-500 text-white text-xs font-bold rounded flex items-center justify-center transition-colors shadow-sm ${isGenerating ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                                className={`w-full py-1.5 bg-black hover:bg-gray-800 text-white text-xs font-bold rounded flex items-center justify-center transition-colors shadow-sm ${isGenerating ? 'opacity-50 cursor-not-allowed' : ''}`}
                                                 type="button"
                                             >
                                                 {isGenerating ? (
@@ -828,13 +828,13 @@ ${currentChapter.content}
                                     </div>
                                 ))
                             ) : (
-                                <div className="text-xs text-stone-600 text-center py-4">暂无匹配题材</div>
+                                <div className="text-xs text-gray-400 text-center py-4">暂无匹配题材</div>
                             )}
                         </div>
                     </div>
 
                     {/* Tools Area */}
-                    <div className="flex-1 flex flex-col min-h-0 bg-gray-50/30">
+                    <div className="flex-1 flex flex-col min-h-0 bg-gray-50/50">
                         <div className="p-4 border-b border-gray-100 bg-white sticky top-0 shrink-0">
                             <h3 className="text-xs font-bold text-gray-400 uppercase flex items-center tracking-wider">
                                 <Zap size={14} className="mr-2 text-gray-900" /> 创作工具箱
