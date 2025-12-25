@@ -850,7 +850,7 @@ ${currentChapter.content}
                                 {!showHumanizeInput ? (
                                     <button
                                         onClick={handleShowHumanizeInput}
-                                        className="w-full py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded text-xs font-bold transition-colors border border-indigo-100"
+                                        className="w-full py-2 bg-white hover:bg-gray-50 text-gray-900 rounded text-xs font-bold transition-colors border border-gray-200 shadow-sm"
                                     >
                                         开始润色
                                     </button>
@@ -894,7 +894,7 @@ ${currentChapter.content}
                                 <button
                                     onClick={handleDemonCritique}
                                     disabled={!currentChapter?.content || isDemonEditing}
-                                    className="w-full py-2 bg-gray-900 hover:bg-gray-800 text-white rounded text-xs font-bold transition-colors mb-4 disabled:opacity-50 shadow-sm"
+                                    className="w-full py-2 bg-white hover:bg-gray-50 text-gray-900 rounded text-xs font-bold transition-colors mb-4 disabled:opacity-50 border border-gray-200 shadow-sm"
                                 >
                                     {isDemonEditing ? <RefreshCw className="animate-spin w-3 h-3 mx-auto" /> : '请求毒舌点评'}
                                 </button>
@@ -927,7 +927,7 @@ ${currentChapter.content}
                                 {!showFeedbackInput ? (
                                     <button
                                         onClick={() => setShowFeedbackInput(true)}
-                                        className="w-full py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded text-xs font-bold transition-colors border border-emerald-100"
+                                        className="w-full py-2 bg-white hover:bg-gray-50 text-gray-900 rounded text-xs font-bold transition-colors border border-gray-200 shadow-sm"
                                     >
                                         输入修改意见
                                     </button>
