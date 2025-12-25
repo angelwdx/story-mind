@@ -1912,7 +1912,7 @@ export default function App() {
                     <img
                         src={storyMindLogo}
                         alt="Story Mind"
-                        className="w-16 h-16 rounded-full mb-3 shadow-sm grayscale hover:grayscale-0 transition-all duration-500"
+                        className="w-auto h-20 mb-2 object-contain grayscale hover:grayscale-0 transition-all duration-500"
                     />
                     <h1 className="font-serif text-xl font-bold tracking-wider text-gray-900">Story Mind <span className="text-gray-400 font-light text-sm align-top">3.0</span></h1>
                     <p className="font-hand text-gray-400 text-lg -rotate-2 mt-1">智能小说创作系统</p>
