@@ -2018,7 +2018,7 @@ export default function App() {
                     <div className="hidden md:flex justify-center mb-12">
                         <div className="flex items-center space-x-4">
                             <div className="h-px w-12 bg-gray-200"></div>
-                            <div className="w-8 h-8 rounded-full border border-black flex items-center justify-center bg-black text-white font-serif italic shadow-lg">
+                            <div className="w-8 h-8 rounded-full border border-black flex items-center justify-center bg-black text-white font-serif shadow-lg">
                                 {currentStep + 1}
                             </div>
                             <h2 className="text-2xl font-serif font-bold text-gray-900 tracking-tight">{STEPS[currentStep].title}</h2>
