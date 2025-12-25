@@ -545,7 +545,7 @@ export const ConfigModal: React.FC<{ isOpen: boolean; onClose: () => void; confi
     // 模型预设配置
     const MODEL_PRESETS = {
         google: {
-            baseUrl: 'https://generativelanguage.googleapis.com',
+            baseUrl: 'https://gemini.txtbg.cn',
             models: [
                 { value: 'gemini-3-pro-preview', label: 'Gemini 3.0 Pro (Preview)' },
                 { value: 'gemini-3-flash-preview', label: 'Gemini 3.0 Flash (Preview)' },
@@ -594,7 +594,7 @@ export const ConfigModal: React.FC<{ isOpen: boolean; onClose: () => void; confi
     // 初始化配置
     const initialConfig = {
         provider: 'google' as const,
-        baseUrl: 'https://generativelanguage.googleapis.com',
+        baseUrl: 'https://gemini.txtbg.cn',
         apiKey: '',
         textModel: 'gemini-2.5-flash',
         customTextModel: ''

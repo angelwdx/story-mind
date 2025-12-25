@@ -13,13 +13,25 @@ interface ModelConfig {
 
 // 获取模型类型
 const getModelType = (baseUrl: string, provider?: string): ModelType => {
-    if (baseUrl.includes('generativelanguage.googleapis.com')) {
+    // 优先根据 provider 参数判断
+    if (provider === 'google') {
         return 'gemini';
-    } else if (baseUrl.includes('anthropic.com') || provider === 'claude') {
+    } else if (provider === 'claude') {
         return 'claude';
-    } else if (baseUrl.includes('deepseek.com') || provider === 'deepseek') {
+    } else if (provider === 'deepseek') {
         return 'deepseek';
-    } else if (baseUrl.includes('openai.com') || provider === 'openai') {
+    } else if (provider === 'openai') {
+        return 'openai';
+    }
+
+    // 如果没有 provider 参数,则根据 URL 判断
+    if (baseUrl.includes('generativelanguage.googleapis.com') || baseUrl.includes('gemini')) {
+        return 'gemini';
+    } else if (baseUrl.includes('anthropic.com')) {
+        return 'claude';
+    } else if (baseUrl.includes('deepseek.com')) {
+        return 'deepseek';
+    } else if (baseUrl.includes('openai.com')) {
         return 'openai';
     } else {
         return 'custom';
@@ -169,7 +181,7 @@ export const generateContent = async (systemPrompt: string, userPrompt: string, 
     // 确保config有合理的默认值
     const safeConfig = (config || {}) as ApiConfig;
     const apiKeyToUse = safeConfig?.apiKey?.trim() || "";
-    const baseUrl = safeConfig?.baseUrl?.trim() || "https://generativelanguage.googleapis.com";
+    const baseUrl = safeConfig?.baseUrl?.trim() || "https://gemini.txtbg.cn";
 
     // 检查API密钥是否为空
     if (!apiKeyToUse) {
@@ -347,7 +359,7 @@ export const generateSpeech = async (text: string, config?: ApiConfig) => {
     while (attempt < maxRetries) {
         try {
             const response = await fetch(
-                `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKeyToUse}`,
+                `https://gemini.txtbg.cn/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKeyToUse}`,
                 {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
