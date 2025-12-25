@@ -1566,7 +1566,7 @@ export default function App() {
                     </div>
 
                     {/* Content Area */}
-                    <div className="bg-white border border-gray-100 rounded-xl p-6 sm:p-10 shadow-sm min-h-[400px] relative">
+                    <div className="bg-white border border-gray-100 rounded-xl p-6 sm:p-10 shadow-sm min-h-[600px] relative">
                         {isGenerating ? (
                             <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/90 z-10">
                                 <RefreshCw className="animate-spin w-10 h-10 text-gray-900 mb-6" />

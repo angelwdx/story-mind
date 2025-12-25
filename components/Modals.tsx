@@ -591,30 +591,30 @@ export const ConfigModal: React.FC<{ isOpen: boolean; onClose: () => void; confi
         google: {
             baseUrl: 'https://generativelanguage.googleapis.com',
             models: [
-                { value: 'gemini-3-pro-preview', label: 'Google Gemini 3.0 Pro (Preview)' },
-                { value: 'gemini-3-flash-preview', label: 'Google Gemini 3.0 Flash (Preview)' },
-                { value: 'gemini-2.5-flash', label: 'Google Gemini 2.5 Flash' },
-                { value: 'gemini-2.5-pro-preview', label: 'Google Gemini 2.5 Pro (Preview)' },
+                { value: 'gemini-3-pro-preview', label: 'Gemini 3.0 Pro (Preview)' },
+                { value: 'gemini-3-flash-preview', label: 'Gemini 3.0 Flash (Preview)' },
+                { value: 'gemini-2.5-flash', label: 'Gemini 2.5 Flash' },
+                { value: 'gemini-2.5-pro-preview', label: 'Gemini 2.5 Pro (Preview)' },
                 { value: 'custom', label: '自定义' }
             ]
         },
         openai: {
             baseUrl: 'https://api.openai.com',
             models: [
-                { value: 'gpt-4o', label: 'OpenAI GPT-4o' },
-                { value: 'gpt-4o-mini', label: 'OpenAI GPT-4o Mini' },
-                { value: 'gpt-3.5-turbo', label: 'OpenAI GPT-3.5 Turbo' },
-                { value: 'gpt-3.5-turbo-instruct', label: 'OpenAI GPT-3.5 Turbo Instruct' },
+                { value: 'gpt-4o', label: 'GPT-4o' },
+                { value: 'gpt-4o-mini', label: 'GPT-4o Mini' },
+                { value: 'gpt-3.5-turbo', label: 'GPT-3.5 Turbo' },
+                { value: 'gpt-3.5-turbo-instruct', label: 'GPT-3.5 Turbo Instruct' },
                 { value: 'custom', label: '自定义' }
             ]
         },
         claude: {
             baseUrl: 'https://api.anthropic.com',
             models: [
-                { value: 'claude-3-opus-20240229', label: 'Anthropic Claude 3 Opus' },
-                { value: 'claude-3-sonnet-20240229', label: 'Anthropic Claude 3 Sonnet' },
-                { value: 'claude-3-haiku-20240307', label: 'Anthropic Claude 3 Haiku' },
-                { value: 'claude-2.1', label: 'Anthropic Claude 2.1' },
+                { value: 'claude-3-opus-20240229', label: 'Claude 3 Opus' },
+                { value: 'claude-3-sonnet-20240229', label: 'Claude 3 Sonnet' },
+                { value: 'claude-3-haiku-20240307', label: 'Claude 3 Haiku' },
+                { value: 'claude-2.1', label: 'Claude 2.1' },
                 { value: 'custom', label: '自定义' }
             ]
         },
