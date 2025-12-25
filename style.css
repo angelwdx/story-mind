@@ -4,32 +4,27 @@
 
 /* Global Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #1c1917;
-  /* stone-900 */
-  border-left: 1px solid #292524;
-  /* stone-800 */
+  background: #fafaf9; /* stone-50 */
+  border-left: 1px solid #e7e5e4; /* stone-200 */
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #57534e;
-  /* stone-600 */
-  border-radius: 5px;
-  border: 2px solid #1c1917;
-  /* Match track for padding effect */
+  background-color: #d6d3d1; /* stone-300 */
+  border-radius: 4px;
+  border: 2px solid #fafaf9; /* Match track for padding */
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background-color: #78716c;
-  /* stone-500 */
+  background-color: #a8a29e; /* stone-400 */
 }
 
 /* Firefox */
 * {
   scrollbar-width: thin;
-  scrollbar-color: #57534e #1c1917;
+  scrollbar-color: #d6d3d1 #fafaf9;
 }

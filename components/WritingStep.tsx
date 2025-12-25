@@ -83,26 +83,26 @@ const WritingStep: React.FC<Props> = ({
             try {
                 const blueprint = generatedData.blueprint;
                 console.log(`[WritingStep] Processing blueprint for chapter ${viewChapter}`);
-                
+
                 // 增强鲁棒性：清理蓝图内容，移除可能的格式问题
                 let cleanedBlueprint = blueprint
                     .replace(/\r\n/g, '\n') // 统一换行符
                     .trim();
-                
+
                 // 重新设计提取逻辑：使用分割方法而非正则匹配，更可靠处理章节边界
                 // 1. 按章节标题分割蓝图，支持不同的章节标题格式
                 const chapterSections = cleanedBlueprint.split(/###\s*第\d+章/);
                 console.log(`[WritingStep] Split blueprint into ${chapterSections.length} sections`);
-                
+
                 // 2. 找到当前章节对应的部分（章节号从1开始，数组索引从1开始）
                 if (chapterSections.length > viewChapter) {
                     // 获取当前章节内容，添加回章节标题前缀
                     const chapterContent = `### 第${viewChapter}章${chapterSections[viewChapter]}`;
                     console.log(`[WritingStep] Chapter ${viewChapter} blueprint content:`, chapterContent);
-                    
+
                     // 3. 增强标题提取，支持多种格式
                     let extractedTitle = `第${viewChapter}章`;
-                    
+
                     // 主要提取方式：针对"### 第X章 - 标题"格式
                     const titleLineMatch = chapterContent.match(/^###\s*第\d+章\s*[-:：\s]+(.+?)(?=\n|$)/m);
                     if (titleLineMatch) {
@@ -132,16 +132,16 @@ const WritingStep: React.FC<Props> = ({
                             }
                         }
                     }
-                    
+
                     // 增强容错：确保标题不为空
                     if (!extractedTitle || extractedTitle === `第${viewChapter}章`) {
                         console.log(`[WritingStep] Using default title for chapter ${viewChapter}`);
                     } else {
                         console.log(`[WritingStep] Successfully extracted title:`, extractedTitle);
                     }
-                    
+
                     console.log(`[WritingStep] Extracted title:`, extractedTitle, `(titleLineMatch:`, titleLineMatch, `)`);
-                    
+
                     // 4. 只有未手动编辑过的标题才从蓝图中提取
                     const title = manuallyEditedTitles.has(viewChapter)
                         ? (existingTitle || `第${viewChapter}章`)
@@ -156,45 +156,45 @@ const WritingStep: React.FC<Props> = ({
                             new RegExp(`${fieldName}\s*[:：]\s*([^\n]+)`, 'i'),
                             new RegExp(`[\*_]*${fieldName}[\*_]*\s*[-:]\s*([^\n]+)`, 'i')
                         ];
-                        
+
                         for (const regex of formats) {
                             const match = chapterContent.match(regex);
                             if (match) {
                                 let extractedContent = match[1].trim();
-                                
+
                                 // 清理Markdown格式：移除双星号、单星号、下划线等格式标记
                                 extractedContent = extractedContent
                                     .replace(/\*\*/g, '') // 移除加粗格式
                                     .replace(/\*/g, '') // 移除斜体格式
                                     .replace(/_/g, '') // 移除下划线格式
                                     .trim(); // 再次清理首尾空格
-                                
+
                                 return extractedContent;
                             }
                         }
                         return defaultValue;
                     };
-                    
+
                     const role = extractField('本章定位');
                     const purpose = extractField('核心作用');
                     const suspense = extractField('悬念密度', '正常');
                     const foreshadowing = extractField('伏笔操作');
-                    
+
                     // 6. 提取认知颠覆，增强容错
                     let twist = '低';
                     const twistMatch = chapterContent.match(/[\*_]*认知颠覆[\*_]*[:：]\s*([^\n]+)/i);
                     if (twistMatch) {
                         let rawTwist = twistMatch[1];
-                        
+
                         // 清理Markdown格式
                         rawTwist = rawTwist
                             .replace(/\*\*/g, '') // 清理加粗格式
                             .replace(/\*/g, '') // 清理斜体格式
                             .replace(/_/g, '') // 清理下划线格式
                             .trim();
-                        
+
                         console.log(`[WritingStep] Raw twist value:`, rawTwist);
-                        
+
                         // 支持多种星级格式变体
                         if (/★★★★★/.test(rawTwist)) twist = '极高';
                         else if (/★★★★/.test(rawTwist)) twist = '高';
@@ -202,7 +202,7 @@ const WritingStep: React.FC<Props> = ({
                         else if (/★★/.test(rawTwist)) twist = '低';
                         console.log(`[WritingStep] Final twist value:`, twist);
                     }
-                    
+
                     // 7. 提取本章简述，增强多行内容处理
                     const summaryMatch = chapterContent.match(/[\*_]*本章简述[\*_]*[:：]\s*([\s\S]*?)(?=\n\s*###|$)/i);
                     let blueprintSummary = '';
@@ -230,7 +230,7 @@ const WritingStep: React.FC<Props> = ({
                     console.log(`[WritingStep] Extracted summary:`, blueprintSummary, `(summaryMatch:`, summaryMatch, `)`);
 
                     const summary = existingSummary || blueprintSummary;
-                    
+
                     // 8. 准备最终参数
                     const finalParams = {
                         title,
@@ -241,7 +241,7 @@ const WritingStep: React.FC<Props> = ({
                         twist,
                         summary
                     };
-                    
+
                     console.log(`[WritingStep] Final extracted params for chapter ${viewChapter}:`, finalParams);
 
                     setChapterParams(finalParams);
@@ -341,12 +341,12 @@ const WritingStep: React.FC<Props> = ({
                     }
                 }
             }
-            
+
             // 确保themes是数组
             if (!Array.isArray(themes)) {
                 themes = [];
             }
-            
+
             setMatchedThemes(themes);
         } catch (e: any) {
             console.error("Failed to fetch themes:", e);
@@ -551,37 +551,37 @@ ${currentChapter.content}
 
     const renderRecBadge = (level: string) => {
         if (level === 'highly_recommended') {
-            return <span className="text-[10px] font-bold bg-emerald-900 text-emerald-300 px-1.5 py-0.5 rounded flex items-center"><ThumbsUp size={10} className="mr-1" /> 强烈推荐</span>;
+            return <span className="text-[10px] font-bold bg-emerald-50 text-emerald-700 px-1.5 py-0.5 rounded flex items-center border border-emerald-100"><ThumbsUp size={10} className="mr-1" /> 强烈推荐</span>;
         } else if (level === 'recommended') {
-            return <span className="text-[10px] font-bold bg-orange-900 text-orange-300 px-1.5 py-0.5 rounded flex items-center"><Star size={10} className="mr-1" /> 推荐</span>;
+            return <span className="text-[10px] font-bold bg-amber-50 text-amber-700 px-1.5 py-0.5 rounded flex items-center border border-amber-100"><Star size={10} className="mr-1" /> 推荐</span>;
         } else if (level === 'not_recommended') {
-            return <span className="text-[10px] font-bold bg-stone-700 text-stone-400 px-1.5 py-0.5 rounded flex items-center"><MinusCircle size={10} className="mr-1" /> 一般</span>;
+            return <span className="text-[10px] font-bold bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded flex items-center border border-gray-200"><MinusCircle size={10} className="mr-1" /> 一般</span>;
         }
         return null;
     };
 
     return (
-        <div className="flex flex-col h-full bg-stone-900/50 rounded-xl overflow-hidden border border-stone-800">
+        <div className="flex flex-col h-full bg-white rounded-xl overflow-hidden border border-gray-100 shadow-sm">
             {/* Header */}
-            <div className="p-4 border-b border-stone-800 bg-stone-900 flex flex-wrap justify-between items-center gap-3 shrink-0">
+            <div className="p-4 border-b border-gray-100 bg-white flex flex-wrap justify-between items-center gap-3 shrink-0">
                 <div className="flex items-center space-x-2 sm:space-x-3">
                     <button
                         disabled={viewChapter === 1}
                         onClick={() => {
                             onUpdateViewChapter(viewChapter - 1);
                         }}
-                        className="p-3 text-stone-400 hover:text-white disabled:opacity-30 rounded-lg hover:bg-stone-800 min-w-[40px] flex items-center justify-center"
+                        className="p-3 text-gray-400 hover:text-gray-900 disabled:opacity-30 rounded-lg hover:bg-gray-50 min-w-[40px] flex items-center justify-center transition-colors"
                         type="button"
                     >
                         <ChevronLeft size={20} />
                     </button>
                     <div className="flex flex-col">
                         <div className="flex items-center space-x-2 mb-1">
-                            <span className="text-xs font-mono font-bold text-orange-400 bg-orange-950 border border-orange-900 px-2 py-0.5 rounded">
+                            <span className="text-xs font-mono font-bold text-gray-900 bg-gray-100 border border-gray-200 px-2 py-0.5 rounded">
                                 第 {viewChapter} 章
                             </span>
                             {!isTitleEditing && (
-                                <span className="text-xs text-stone-500 truncate max-w-[150px] md:max-w-xs">
+                                <span className="text-xs text-gray-500 truncate max-w-[150px] md:max-w-xs font-serif">
                                     {chapterParams.role ? `定位: ${chapterParams.role}` : ''}
                                 </span>
                             )}
@@ -593,15 +593,15 @@ ${currentChapter.content}
                                     value={tempTitle}
                                     onChange={(e) => setTempTitle(e.target.value)}
                                     placeholder={`输入第${viewChapter}章标题...`}
-                                    className="bg-stone-800 text-white text-sm px-2 py-1.5 rounded border border-stone-600 focus:border-orange-500 outline-none w-48 md:w-64"
+                                    className="bg-gray-50 text-gray-900 text-sm px-2 py-1.5 rounded border border-gray-200 focus:border-black outline-none w-48 md:w-64 font-serif"
                                     autoFocus
                                 />
-                                <button onClick={handleTitleSave} className="ml-2 text-emerald-400 hover:text-emerald-300 p-2 hover:bg-stone-800 rounded-lg" type="button"><Check size={16} /></button>
+                                <button onClick={handleTitleSave} className="ml-2 text-emerald-600 hover:text-emerald-700 p-2 hover:bg-emerald-50 rounded-lg transition-colors" type="button"><Check size={16} /></button>
                             </div>
                         ) : (
-                            <h2 className="font-bold text-base md:text-lg flex items-center cursor-pointer hover:text-orange-400 h-8" onClick={startEditing}>
-                                {chapterParams.title === `第${viewChapter}章` ? <span className="text-stone-500 italic font-normal text-sm">点击输入标题...</span> : chapterParams.title}
-                                <Edit size={12} className="ml-2 opacity-50" />
+                            <h2 className="font-bold text-base md:text-lg flex items-center cursor-pointer hover:text-gray-600 h-8 font-serif text-gray-900" onClick={startEditing}>
+                                {chapterParams.title === `第${viewChapter}章` ? <span className="text-gray-400 italic font-normal text-sm">点击输入标题...</span> : chapterParams.title}
+                                <Edit size={12} className="ml-2 opacity-30 group-hover:opacity-100" />
                             </h2>
                         )}
                     </div>
@@ -619,7 +619,7 @@ ${currentChapter.content}
                                 setIsEditMode(false);
                             }
                         }}
-                        className="p-3 text-stone-400 hover:text-white disabled:opacity-30 rounded-lg hover:bg-stone-800 ml-2 min-w-[40px] flex items-center justify-center"
+                        className="p-3 text-gray-400 hover:text-gray-900 disabled:opacity-30 rounded-lg hover:bg-gray-50 ml-2 min-w-[40px] flex items-center justify-center transition-colors"
                         type="button"
                     >
                         <ChevronRight size={20} />
@@ -629,7 +629,7 @@ ${currentChapter.content}
                 <div className="flex items-center space-x-2 sm:space-x-3">
                     <button
                         onClick={() => setIsEditMode(!isEditMode)}
-                        className={`p-3 rounded-lg transition-colors min-w-[40px] flex items-center justify-center ${isEditMode ? 'bg-orange-600 text-white shadow-lg shadow-orange-900/20' : 'bg-stone-800 hover:bg-stone-700 text-stone-300'}`}
+                        className={`p-3 rounded-lg transition-colors min-w-[40px] flex items-center justify-center border ${isEditMode ? 'bg-black text-white border-black shadow-md' : 'bg-white hover:bg-gray-50 text-gray-400 hover:text-gray-600 border-gray-200'}`}
                         title={isEditMode ? "切换到阅读模式" : "切换到编辑模式"}
                         type="button"
                     >
@@ -642,7 +642,7 @@ ${currentChapter.content}
                             onSyncContext(viewChapter);
                         }}
                         disabled={!currentChapter?.content || isGenerating || isSyncingContext}
-                        className="p-3 bg-stone-800 hover:bg-stone-700 text-amber-300 hover:text-white rounded-lg transition-colors border border-amber-900/30 min-w-[40px] flex items-center justify-center"
+                        className="p-3 bg-white hover:bg-gray-50 text-amber-600 hover:text-amber-700 rounded-lg transition-colors border border-amber-200 min-w-[40px] flex items-center justify-center"
                         title="状态更新"
                         type="button"
                     >
@@ -655,7 +655,7 @@ ${currentChapter.content}
                             onGenerate(viewChapter, params, selectedTheme);
                         }}
                         disabled={isGenerating}
-                        className="p-3 bg-stone-800 hover:bg-stone-700 text-stone-300 rounded-lg hover:text-white transition-colors min-w-[40px] flex items-center justify-center"
+                        className="p-3 bg-white hover:bg-gray-50 text-gray-400 rounded-lg hover:text-gray-900 transition-colors border border-gray-200 min-w-[40px] flex items-center justify-center"
                         title="重新生成"
                         type="button"
                     >
@@ -665,7 +665,7 @@ ${currentChapter.content}
                     <button
                         onClick={downloadChapter}
                         disabled={!currentChapter?.content}
-                        className="p-3 bg-stone-800 hover:bg-stone-700 text-stone-300 rounded-lg min-w-[40px] flex items-center justify-center"
+                        className="p-3 bg-white hover:bg-gray-50 text-gray-400 rounded-lg hover:text-gray-900 transition-colors border border-gray-200 min-w-[40px] flex items-center justify-center"
                         title="下载章节"
                         type="button"
                     >
@@ -678,35 +678,35 @@ ${currentChapter.content}
             <div className="flex-1 flex overflow-hidden relative">
                 {/* Background Overlay for Mobile Panel */}
                 {isRightPanelOpen && (
-                    <div 
+                    <div
                         className="absolute inset-0 bg-black/50 z-10 lg:hidden"
                         onClick={() => setIsRightPanelOpen(false)}
                     />
                 )}
 
                 {/* Main Editor */}
-                <div className="flex-1 overflow-hidden bg-stone-900 relative flex flex-col">
+                <div className="flex-1 overflow-hidden bg-white relative flex flex-col">
                     {isGenerating ? (
-                        <div className="flex flex-col items-center justify-center flex-1 text-orange-400 space-y-4 py-20">
-                            <RefreshCw className="animate-spin w-10 h-10" />
+                        <div className="flex flex-col items-center justify-center flex-1 text-gray-900 space-y-6 py-20">
+                            <RefreshCw className="animate-spin w-10 h-10 text-gray-900" />
                             <div className="text-center">
-                                <p className="font-bold text-lg">{loadingMessage || `AI 正在${currentChapter?.content ? '重新' : ''}撰写 ${chapterParams.title || `第${viewChapter}章`}`}</p>
+                                <p className="font-bold text-lg font-serif">{loadingMessage || `AI 正在${currentChapter?.content ? '重新' : ''}撰写 ${chapterParams.title || `第${viewChapter}章`}`}</p>
                                 {!loadingMessage && (
-                                    <p className="text-sm opacity-75 mt-1">
+                                    <p className="text-sm text-gray-500 mt-2 font-serif italic">
                                         {selectedTheme ? `正在应用 [${selectedTheme.name}] 构建情节...` : '正在构建场景、安排伏笔...'}
                                     </p>
                                 )}
                             </div>
                         </div>
                     ) : !currentChapter?.content ? (
-                        <div className="flex flex-col items-center justify-center flex-1 text-stone-500 space-y-4 py-20">
-                            <div className="w-16 h-16 bg-stone-900 rounded-full flex items-center justify-center">
-                                <Edit size={32} className="opacity-50" />
+                        <div className="flex flex-col items-center justify-center flex-1 text-gray-400 space-y-6 py-20">
+                            <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center border border-gray-100">
+                                <Edit size={32} className="opacity-30 text-gray-400" />
                             </div>
-                            <p>本章暂无内容</p>
+                            <p className="font-serif text-lg">本章暂无内容</p>
                             <button
                                 onClick={() => onGenerate(viewChapter, getActiveParams(), selectedTheme)}
-                                className="px-6 py-2 bg-orange-600 hover:bg-orange-500 text-white rounded-full font-bold transition-all shadow-lg hover:shadow-orange-500/20"
+                                className="px-8 py-3 bg-black hover:bg-gray-800 text-white rounded-full font-bold transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
                                 type="button"
                             >
                                 {selectedTheme ? (
@@ -721,15 +721,15 @@ ${currentChapter.content}
                         <div className="flex-1 w-full h-full flex flex-col">
                             {isEditMode ? (
                                 <textarea
-                                    className="w-full flex-1 bg-transparent text-stone-300 leading-loose resize-none outline-none font-serif text-lg py-12 px-4 md:px-[calc(50%-20rem)] lg:px-[calc(50%-24rem)] border-none focus:ring-0 block custom-scrollbar"
+                                    className="w-full flex-1 bg-transparent text-gray-800 leading-loose resize-none outline-none font-serif text-lg py-12 px-8 md:px-[calc(50%-20rem)] lg:px-[calc(50%-24rem)] border-none focus:ring-0 block custom-scrollbar placeholder-gray-300"
                                     value={currentChapter.content}
                                     onChange={(e) => onRewrite(viewChapter, e.target.value)}
                                     placeholder="在此开始创作..."
                                     autoFocus
                                 />
                             ) : (
-                                <div className="flex-1 overflow-y-auto custom-scrollbar">
-                                    <div className="max-w-3xl mx-auto p-12">
+                                <div className="flex-1 overflow-y-auto custom-scrollbar bg-white">
+                                    <div className="max-w-3xl mx-auto p-12 prose prose-lg prose-stone font-serif">
                                         <MarkdownViewer content={currentChapter.content} />
                                     </div>
                                 </div>
@@ -740,7 +740,7 @@ ${currentChapter.content}
                     {/* Mobile Panel Toggle Button */}
                     <button
                         onClick={() => setIsRightPanelOpen(true)}
-                        className="absolute bottom-6 right-6 z-10 p-3 bg-orange-600 hover:bg-orange-500 text-white rounded-full shadow-lg transition-all transform hover:scale-110 lg:hidden"
+                        className="absolute bottom-6 right-6 z-10 p-3 bg-black hover:bg-gray-800 text-white rounded-full shadow-lg transition-all transform hover:scale-110 lg:hidden"
                         title="显示工具面板"
                     >
                         <Zap size={20} />
@@ -833,153 +833,46 @@ ${currentChapter.content}
                         </div>
                     </div>
 
-                    {/* Demon Editor & Tools */}
-                    <div className="flex-1 flex flex-col min-h-0">
-                        <div className="p-4 flex flex-col flex-1 min-h-0 space-y-4">
-                            {/* Demon Editor Card */}
-                            <div className={`bg-stone-800/30 rounded-lg border border-stone-700/50 transition-all duration-300 flex flex-col ${demonCritique ? 'flex-1 min-h-0' : 'shrink-0 p-3'}`}>
-                                <div className={`flex items-center justify-between shrink-0 ${demonCritique ? 'p-3 border-b border-stone-700/50' : 'mb-2'}`}>
-                                    <h3 className="text-xs font-bold text-red-400 flex items-center">
-                                        <Skull size={14} className="mr-2" /> 魔鬼编辑审阅
-                                    </h3>
-                                    {!__HIDE_PROMPT_MANAGEMENT__ && (
-                                            <button
-                                                onClick={() => onEditPrompt('DEMON_EDITOR')}
-                                                className="text-stone-600 hover:text-white transition-colors"
-                                                title="查看/编辑魔鬼编辑提示词"
-                                            >
-                                                <FileText size={12} />
-                                            </button>
-                                        )}
-                                </div>
+                    {/* Tools Area */}
+                    <div className="flex-1 flex flex-col min-h-0 bg-gray-50/30">
+                        <div className="p-4 border-b border-gray-100 bg-white sticky top-0 shrink-0">
+                            <h3 className="text-xs font-bold text-gray-400 uppercase flex items-center tracking-wider">
+                                <Zap size={14} className="mr-2 text-gray-900" /> 创作工具箱
+                            </h3>
+                        </div>
 
-                                {!demonCritique ? (
+                        <div className="overflow-y-auto p-4 space-y-4 custom-scrollbar">
+                            {/* Humanize Rewrite Tool */}
+                            <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-sm">
+                                <h4 className="font-bold text-sm text-gray-900 mb-3 flex items-center">
+                                    <PenTool size={16} className="mr-2 text-indigo-500" /> 人性化润色
+                                </h4>
+                                {!showHumanizeInput ? (
                                     <button
-                                        onClick={handleDemonCritique}
-                                        disabled={!currentChapter?.content || isDemonEditing}
-                                        className="w-full py-2 bg-red-900/20 hover:bg-red-900/40 text-red-300 text-xs rounded border border-red-900/50 transition-colors"
-                                        type="button"
+                                        onClick={handleShowHumanizeInput}
+                                        className="w-full py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded text-xs font-bold transition-colors border border-indigo-100"
                                     >
-                                        {isDemonEditing ? '审阅中...' : '召唤魔鬼编辑'}
+                                        开始润色
                                     </button>
                                 ) : (
-                                    <div className="flex flex-col flex-1 min-h-0">
-                                        {/* Scrollable Text Area */}
-                                        <div className="flex-1 overflow-y-auto p-3 text-xs text-stone-400 bg-stone-950/50 custom-scrollbar">
-                                            <MarkdownViewer content={demonCritique} compact />
-                                        </div>
-
-                                        {/* Buttons Pinned to Bottom */}
-                                        <div className="p-3 border-t border-stone-700/50 bg-stone-900/50 shrink-0 space-y-2">
-                                            <div className="flex justify-end mb-2">
-                                                {!__HIDE_PROMPT_MANAGEMENT__ && (
-                                                    <button
-                                                        onClick={() => onEditPrompt('DEMON_REWRITE_SPECIFIC')}
-                                                        className="text-[10px] text-stone-600 hover:text-white flex items-center transition-colors"
-                                                        title="查看/编辑重写提示词"
-                                                    >
-                                                        <FileText size={10} className="mr-1" /> 重写提示词
-                                                    </button>
-                                                )}
-                                            </div>
-                                            <div className="grid grid-cols-1 gap-2">
-                                                <button
-                                                    onClick={() => handleApplyDemonRewrite('安全润色')}
-                                                    disabled={isDemonEditing}
-                                                    className={`text-xs py-2 rounded flex items-center justify-center transition-all ${activeRewriteOption === '安全润色'
-                                                        ? 'bg-emerald-900 text-white shadow-lg shadow-emerald-900/20'
-                                                        : 'bg-emerald-900/30 text-emerald-300 hover:bg-emerald-900/50'
-                                                        } ${isDemonEditing && activeRewriteOption !== '安全润色' ? 'opacity-30 cursor-not-allowed' : ''}`}
-                                                    type="button"
-                                                >
-                                                    {activeRewriteOption === '安全润色' ? <RefreshCw size={12} className="mr-1.5 animate-spin" /> : <span className="mr-1.5">🛡️</span>}
-                                                    {activeRewriteOption === '安全润色' ? '正在润色...' : '安全润色'}
-                                                </button>
-
-                                                <button
-                                                    onClick={() => handleApplyDemonRewrite('激进重构')}
-                                                    disabled={isDemonEditing}
-                                                    className={`text-xs py-2 rounded flex items-center justify-center transition-all ${activeRewriteOption === '激进重构'
-                                                        ? 'bg-amber-900 text-white shadow-lg shadow-amber-900/20'
-                                                        : 'bg-amber-900/30 text-amber-300 hover:bg-amber-900/50'
-                                                        } ${isDemonEditing && activeRewriteOption !== '激进重构' ? 'opacity-30 cursor-not-allowed' : ''}`}
-                                                    type="button"
-                                                >
-                                                    {activeRewriteOption === '激进重构' ? <RefreshCw size={12} className="mr-1.5 animate-spin" /> : <span className="mr-1.5">🔥</span>}
-                                                    {activeRewriteOption === '激进重构' ? '正在重构...' : '激进重构'}
-                                                </button>
-
-                                                <button
-                                                    onClick={() => handleApplyDemonRewrite('封神方案')}
-                                                    disabled={isDemonEditing}
-                                                    className={`text-xs py-2 rounded flex items-center justify-center transition-all border border-red-900/50 ${activeRewriteOption === '封神方案'
-                                                        ? 'bg-red-900 text-white shadow-lg shadow-red-900/20'
-                                                        : 'bg-red-900/30 text-red-300 hover:bg-red-900/50'
-                                                        } ${isDemonEditing && activeRewriteOption !== '封神方案' ? 'opacity-30 cursor-not-allowed' : ''}`}
-                                                    type="button"
-                                                >
-                                                    {activeRewriteOption === '封神方案' ? <RefreshCw size={12} className="mr-1.5 animate-spin" /> : <span className="mr-1.5">🌟</span>}
-                                                    {activeRewriteOption === '封神方案' ? '正在封神...' : '封神重写'}
-                                                </button>
-                                            </div>
-                                            <button onClick={() => setDemonCritique(null)} className="w-full text-xs text-stone-500 hover:text-white" type="button">关闭审阅</button>
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-
-                            {/* Feedback (Pinned to bottom of tools panel when not collapsed) */}
-                            <div className="bg-stone-800/30 rounded-lg p-3 border border-stone-700/50 shrink-0">
-                                <div className="flex items-center justify-between mb-2">
-                                    <h3 className="text-xs font-bold text-orange-400 flex items-center">
-                                        <MessageSquare size={14} className="mr-2" /> 读者反馈模拟
-                                    </h3>
-                                    {!__HIDE_PROMPT_MANAGEMENT__ && (
-                                            <button
-                                                onClick={() => onEditPrompt('USER_FEEDBACK_REWRITE')}
-                                                className="text-stone-600 hover:text-white transition-colors"
-                                                title="查看/编辑反馈提示词"
-                                            >
-                                                <FileText size={12} />
-                                            </button>
-                                        )}
-                                </div>
-                                {!showFeedbackInput ? (
-                                    <button
-                                        onClick={() => setShowFeedbackInput(true)}
-                                        className="w-full py-2 bg-orange-900/20 hover:bg-orange-900/40 text-orange-300 text-xs rounded border border-orange-900/50 transition-colors"
-                                        type="button"
-                                    >
-                                        输入修改意见
-                                    </button>
-                                ) : (
-                                    <div className="space-y-2">
+                                    <div className="space-y-3">
                                         <textarea
-                                            value={userFeedback}
-                                            onChange={(e) => setUserFeedback(e.target.value)}
-                                            placeholder="比如：这一段对话太尴尬了，改得自然点..."
-                                            className="w-full h-20 bg-stone-950 border border-stone-700 rounded p-2 text-xs text-stone-300 resize-none outline-none focus:border-orange-500"
+                                            value={humanizePrompt}
+                                            onChange={(e) => setHumanizePrompt(e.target.value)}
+                                            placeholder="在此输入参考范文（可选），AI将模仿其风格进行润色..."
+                                            className="w-full h-24 bg-gray-50 border border-gray-200 rounded p-2 text-xs text-gray-700 outline-none focus:border-indigo-500 focus:bg-white transition-all resize-none"
                                         />
                                         <div className="flex space-x-2">
                                             <button
-                                                onClick={handleUserFeedbackRewrite}
-                                                disabled={!userFeedback.trim() || isFeedbackEditing}
-                                                className="flex-1 py-1 bg-orange-600 text-white text-xs rounded hover:bg-orange-500 disabled:opacity-50 flex items-center justify-center gap-1"
-                                                type="button"
+                                                onClick={handleHumanizeRewrite}
+                                                disabled={isHumanizeRewriting}
+                                                className="flex-1 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded text-xs font-bold transition-colors disabled:opacity-50"
                                             >
-                                                {isFeedbackEditing ? (
-                                                    <>
-                                                        <RefreshCw size={12} className="animate-spin" />
-                                                        修改中...
-                                                    </>
-                                                ) : (
-                                                    "确认修改"
-                                                )}
+                                                {isHumanizeRewriting ? <RefreshCw className="animate-spin w-3 h-3 mx-auto" /> : '确认润色'}
                                             </button>
                                             <button
-                                                onClick={() => setShowFeedbackInput(false)}
-                                                className="px-2 py-1 bg-stone-700 text-stone-300 text-xs rounded hover:bg-stone-600"
-                                                type="button"
+                                                onClick={handleCancelHumanize}
+                                                className="px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded text-xs transition-colors"
                                             >
                                                 取消
                                             </button>
@@ -988,58 +881,75 @@ ${currentChapter.content}
                                 )}
                             </div>
 
-                            {/* Humanize Rewrite Feature */}
-                            <div className="bg-stone-800/30 rounded-lg p-3 border border-stone-700/50 shrink-0">
-                                <div className="flex items-center justify-between mb-2">
-                                    <h3 className="text-xs font-bold text-blue-400 flex items-center">
-                                        <PenTool size={14} className="mr-2" /> 人性化改写
-                                    </h3>
+                            {/* Demon Editor Tool */}
+                            <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-sm">
+                                <div className="flex justify-between items-center mb-3">
+                                    <h4 className="font-bold text-sm text-gray-900 flex items-center">
+                                        <Skull size={16} className="mr-2 text-gray-900" /> 魔鬼编辑
+                                    </h4>
                                     {!__HIDE_PROMPT_MANAGEMENT__ && (
-                                            <button
-                                                onClick={() => onEditPrompt('HUMANIZE_REWRITE')}
-                                                className="text-stone-600 hover:text-white transition-colors"
-                                                title="查看/编辑人性化改写提示词"
-                                            >
-                                                <FileText size={12} />
-                                            </button>
-                                        )}
+                                        <button onClick={() => onEditPrompt('DEMON_EDITOR')} className="text-gray-300 hover:text-gray-600" title="编辑提示词"><FileText size={12} /></button>
+                                    )}
                                 </div>
-                                {!showHumanizeInput ? (
+                                <button
+                                    onClick={handleDemonCritique}
+                                    disabled={!currentChapter?.content || isDemonEditing}
+                                    className="w-full py-2 bg-gray-900 hover:bg-gray-800 text-white rounded text-xs font-bold transition-colors mb-4 disabled:opacity-50 shadow-sm"
+                                >
+                                    {isDemonEditing ? <RefreshCw className="animate-spin w-3 h-3 mx-auto" /> : '请求毒舌点评'}
+                                </button>
+
+                                {demonCritique && (
+                                    <div className="space-y-3 animate-in fade-in slide-in-from-top-2">
+                                        <div className="bg-gray-50 rounded p-3 text-xs text-gray-700 border border-gray-200 leading-relaxed font-serif">
+                                            <div className="font-bold mb-1 text-gray-900">魔鬼点评：</div>
+                                            <div className="max-h-40 overflow-y-auto custom-scrollbar">{demonCritique}</div>
+                                        </div>
+                                        <div className="space-y-2">
+                                            <button onClick={() => handleApplyDemonRewrite('option1')} disabled={isDemonEditing} className="w-full text-left p-2 hover:bg-gray-50 rounded text-xs text-gray-600 border border-transparent hover:border-gray-200 transition-all truncate">
+                                                👉 方案A：强化冲突与悬念
+                                            </button>
+                                            <button onClick={() => handleApplyDemonRewrite('option2')} disabled={isDemonEditing} className="w-full text-left p-2 hover:bg-gray-50 rounded text-xs text-gray-600 border border-transparent hover:border-gray-200 transition-all truncate">
+                                                👉 方案B：优化节奏与心理
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* User Feedback Tool */}
+                            <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-sm">
+                                <div className="flex justify-between items-center mb-3">
+                                    <h4 className="font-bold text-sm text-gray-900 flex items-center">
+                                        <MessageSquare size={16} className="mr-2 text-emerald-500" /> 用户反馈
+                                    </h4>
+                                </div>
+                                {!showFeedbackInput ? (
                                     <button
-                                        onClick={handleShowHumanizeInput}
-                                        className="w-full py-2 bg-blue-900/20 hover:bg-blue-900/40 text-blue-300 text-xs rounded border border-blue-900/50 transition-colors"
-                                        type="button"
+                                        onClick={() => setShowFeedbackInput(true)}
+                                        className="w-full py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded text-xs font-bold transition-colors border border-emerald-100"
                                     >
-                                        开始人性化改写
+                                        输入修改意见
                                     </button>
                                 ) : (
-                                    <div className="space-y-2">
+                                    <div className="space-y-3">
                                         <textarea
-                                            value={humanizePrompt}
-                                            onChange={(e) => setHumanizePrompt(e.target.value)}
-                                            placeholder="请输入范文，AI将模仿其风格进行改写..."
-                                            className="w-full h-20 bg-stone-950 border border-stone-700 rounded p-2 text-xs text-stone-300 resize-none outline-none focus:border-blue-500"
+                                            value={userFeedback}
+                                            onChange={(e) => setUserFeedback(e.target.value)}
+                                            placeholder="请输入具体的修改意见..."
+                                            className="w-full h-24 bg-gray-50 border border-gray-200 rounded p-2 text-xs text-gray-700 outline-none focus:border-emerald-500 focus:bg-white transition-all resize-none"
                                         />
                                         <div className="flex space-x-2">
                                             <button
-                                                onClick={handleHumanizeRewrite}
-                                                disabled={isHumanizeRewriting}
-                                                className="flex-1 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-500 disabled:opacity-50 flex items-center justify-center gap-1"
-                                                type="button"
+                                                onClick={handleUserFeedbackRewrite}
+                                                disabled={!userFeedback.trim() || isFeedbackEditing}
+                                                className="flex-1 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded text-xs font-bold transition-colors disabled:opacity-50"
                                             >
-                                                {isHumanizeRewriting ? (
-                                                    <>
-                                                        <RefreshCw size={12} className="animate-spin" />
-                                                        改写中...
-                                                    </>
-                                                ) : (
-                                                    "确认改写"
-                                                )}
+                                                {isFeedbackEditing ? <RefreshCw className="animate-spin w-3 h-3 mx-auto" /> : '确认修改'}
                                             </button>
                                             <button
-                                                onClick={handleCancelHumanize}
-                                                className="px-2 py-1 bg-stone-700 text-stone-300 text-xs rounded hover:bg-stone-600"
-                                                type="button"
+                                                onClick={() => setShowFeedbackInput(false)}
+                                                className="px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded text-xs transition-colors"
                                             >
                                                 取消
                                             </button>

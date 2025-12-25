@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import {
     BookOpen, Users, Globe, GitMerge, List, Activity, PenTool,
     Settings, RefreshCw, Sparkles, Copy, FileText, Play, Gavel,
-    Clock, Archive, LayoutDashboard, LayoutList
+    Clock, Archive, LayoutDashboard, LayoutList, ArrowRight
 } from 'lucide-react';
 import unclecatlogo from './public/unclecatlogo.png'; // 导入图片作为模块
 import {
@@ -894,7 +894,7 @@ export default function App() {
             };
 
             const prompt = formatPrompt(template, variables);
-            const wordCount = parseInt(inputs.wordCount || 2000);
+            const wordCount = inputs.wordCount || 2000;
             const rawResult = await generateContent(prompt, `请创作第${chapterNum}章`, apiConfig, wordCount);
 
             // 只清理标题，不裁剪内容，确保AI生成的内容完整
@@ -1271,236 +1271,218 @@ export default function App() {
     const renderContent = () => {
         if (currentStep === 0) {
             return (
-                <div className="max-w-4xl mx-auto space-y-6 animate-in fade-in slide-in-from-bottom-4">
-                    <div className="bg-stone-900 border border-stone-800 rounded-xl p-6 shadow-xl">
-                        <div className="flex justify-between items-center bg-stone-900 p-4 rounded-xl border border-stone-800">
-                            <h2 className="text-xl font-bold text-white flex items-center">
-                                <BookOpen className="mr-2 text-orange-400" size={24} />
-                                创作灵感初始化
-                            </h2>
-                        </div>
+                <div className="max-w-3xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 pb-12">
+                    <div className="text-center space-y-2 mb-8 pt-8">
+                        <h2 className="text-3xl font-serif font-bold text-gray-900 tracking-tight">
+                            开启您的创作旅程
+                        </h2>
+                        <p className="text-gray-400 font-hand text-xl tracking-wide">Tell me your story...</p>
+                    </div>
+
+                    <div className="bg-white border border-gray-100 rounded-xl p-6 sm:p-8 shadow-sm">
+                        <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6 flex items-center">
+                            <BookOpen size={14} className="mr-2" />
+                            Core Concept
+                        </h3>
 
                         <div className="space-y-6">
-                            {/* 核心信息组 */}
-                            <div className="bg-stone-800/30 border border-stone-700/50 rounded-lg p-4 sm:p-5">
-                                <h3 className="text-sm font-semibold text-orange-400 uppercase mb-4 flex items-center">
-                                    <BookOpen size={16} className="mr-2" />
-                                    核心设定
-                                </h3>
-                                <div className="grid grid-cols-1 gap-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2 font-serif">
+                                    核心脑洞 (Topic) <span className="text-black ml-1">*</span>
+                                </label>
+                                <textarea
+                                    className="w-full min-h-[140px] bg-gray-50 border-0 rounded-lg p-4 text-gray-900 placeholder:text-gray-400 focus:ring-1 focus:ring-black outline-none resize-none transition-all font-sans"
+                                    placeholder="请输入您的故事核心创意，例如：一个在修仙世界卖保险的穿越者..."
+                                    value={inputs.topic}
+                                    onChange={(e) => setInputs(prev => ({ ...prev, topic: e.target.value }))}
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="bg-white border border-gray-100 rounded-xl p-6 sm:p-8 shadow-sm space-y-8">
+                        <div>
+                            <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6 flex items-center">
+                                <List size={14} className="mr-2" />
+                                Basic Settings
+                            </h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2 font-serif">
+                                        题材分类 (Genre)
+                                    </label>
+                                    <select
+                                        className="w-full bg-gray-50 border-0 rounded-lg p-3 text-gray-900 focus:ring-1 focus:ring-black outline-none transition-all appearance-none"
+                                        value={inputs.genre}
+                                        onChange={(e) => setInputs(prev => ({ ...prev, genre: e.target.value }))}
+                                    >
+                                        <option value="">请选择题材...</option>
+                                        <optgroup label="男频">
+                                            {TAGS.male.filter(t => t !== '全部').map(t => <option key={t} value={t}>{t}</option>)}
+                                        </optgroup>
+                                        <optgroup label="女频">
+                                            {TAGS.female.filter(t => t !== '全部').map(t => <option key={t} value={t}>{t}</option>)}
+                                        </optgroup>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2 font-serif">
+                                        叙事视角
+                                    </label>
+                                    <select
+                                        className="w-full bg-gray-50 border-0 rounded-lg p-3 text-gray-900 focus:ring-1 focus:ring-black outline-none transition-all"
+                                        value={inputs.perspective}
+                                        onChange={(e) => setInputs(prev => ({ ...prev, perspective: e.target.value }))}
+                                    >
+                                        <option value="">请选择视角...</option>
+                                        {NARRATIVE_PERSPECTIVES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2 font-serif">
+                                        故事基调
+                                    </label>
+                                    <select
+                                        className="w-full bg-gray-50 border-0 rounded-lg p-3 text-gray-900 focus:ring-1 focus:ring-black outline-none transition-all"
+                                        value={inputs.tone}
+                                        onChange={(e) => setInputs(prev => ({ ...prev, tone: e.target.value }))}
+                                    >
+                                        <option value="">请选择故事基调...</option>
+                                        {STORY_TONES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2 font-serif">
+                                        结局倾向
+                                    </label>
+                                    <select
+                                        className="w-full bg-gray-50 border-0 rounded-lg p-3 text-gray-900 focus:ring-1 focus:ring-black outline-none transition-all"
+                                        value={inputs.ending}
+                                        onChange={(e) => setInputs(prev => ({ ...prev, ending: e.target.value }))}
+                                    >
+                                        <option value="">请选择结局...</option>
+                                        {ENDING_TYPES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="pt-6 border-t border-gray-100">
+                            <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6 flex items-center">
+                                <LayoutDashboard size={14} className="mr-2" />
+                                Requirements
+                            </h3>
+                            <div className="space-y-6">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2 font-serif">
+                                        小说名称
+                                    </label>
+                                    <div className="flex gap-2">
+                                        <input
+                                            type="text"
+                                            className="flex-1 bg-gray-50 border-0 rounded-lg p-3 text-gray-900 focus:ring-1 focus:ring-black outline-none transition-all"
+                                            placeholder="输入小说名称或AI生成..."
+                                            value={inputs.novelTitle}
+                                            onChange={(e) => setInputs(prev => ({ ...prev, novelTitle: e.target.value }))}
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={async () => {
+                                                if (!apiConfig.apiKey) {
+                                                    setShowConfigModal(true);
+                                                    return;
+                                                }
+                                                if (!inputs.topic || !inputs.genre) {
+                                                    showAlert('请先填写核心脑洞和题材分类', "warning");
+                                                    return;
+                                                }
+                                                setIsGenerating(true);
+                                                try {
+                                                    const systemPrompt = "你是一个专业的小说命名专家。";
+                                                    const userPrompt = `根据以下信息生成一个小说名称（只返回书名）：\n核心创意：${inputs.topic}\n题材：${inputs.genre}\n基调：${inputs.tone || '未指定'}`;
+                                                    const result = await generateContent(systemPrompt, userPrompt, apiConfig);
+                                                    const title = result.trim().replace(/["""]/g, '');
+                                                    setInputs(prev => ({ ...prev, novelTitle: title }));
+                                                } catch (error) {
+                                                    console.error('生成书名失败:', error);
+                                                    showAlert('生成失败，请检查API配置', "error");
+                                                } finally {
+                                                    setIsGenerating(false);
+                                                }
+                                            }}
+                                            disabled={isGenerating || !inputs.topic || !inputs.genre}
+                                            className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-900 rounded-lg transition-all disabled:opacity-50 text-sm font-medium"
+                                        >
+                                            <Sparkles size={16} />
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-4">
                                     <div>
-                                        <label className="block text-sm font-medium text-stone-400 mb-2">
-                                            核心脑洞 (Topic) <span className="text-red-500 ml-1">*</span>
+                                        <label className="block text-sm font-medium text-gray-700 mb-2 font-serif">
+                                            预计章节数
                                         </label>
-                                        <textarea
-                                            className="w-full min-h-[120px] sm:h-36 bg-stone-950 border border-stone-800 rounded-lg p-3 text-white focus:ring-2 focus:ring-orange-500 outline-none resize-none transition-all hover:border-orange-700"
-                                            placeholder="请输入您的故事核心创意，例如：一个在修仙世界卖保险的穿越者，必须靠理赔来提升修为..."
-                                            value={inputs.topic}
-                                            onChange={(e) => setInputs(prev => ({ ...prev, topic: e.target.value }))}
+                                        <input
+                                            type="text"
+                                            inputMode="numeric"
+                                            className="w-full bg-gray-50 border-0 rounded-lg p-3 text-gray-900 focus:ring-1 focus:ring-black outline-none transition-all"
+                                            value={inputs.numberOfChapters || ''}
+                                            onChange={(e) => {
+                                                const value = e.target.value;
+                                                setInputs(prev => ({ ...prev, numberOfChapters: value ? parseInt(value) : 0 }));
+                                            }}
+                                            placeholder="12"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-2 font-serif">
+                                            每章字数
+                                        </label>
+                                        <input
+                                            type="text"
+                                            inputMode="numeric"
+                                            className="w-full bg-gray-50 border-0 rounded-lg p-3 text-gray-900 focus:ring-1 focus:ring-black outline-none transition-all"
+                                            value={inputs.wordCount || ''}
+                                            onChange={(e) => {
+                                                const value = e.target.value;
+                                                setInputs(prev => ({ ...prev, wordCount: value ? parseInt(value) : 0 }));
+                                            }}
+                                            placeholder="2000"
                                         />
                                     </div>
                                 </div>
-                            </div>
 
-                            {/* 基础信息组 */}
-                            <div className="grid grid-cols-1 gap-4">
-                                <div className="bg-stone-800/30 border border-stone-700/50 rounded-lg p-4 sm:p-5">
-                                    <h3 className="text-sm font-semibold text-emerald-400 uppercase mb-4 flex items-center">
-                                        <List size={16} className="mr-2" />
-                                        基础属性
-                                    </h3>
-                                    <div className="space-y-4">
-                                        <div>
-                                            <label className="block text-sm font-medium text-stone-400 mb-2">
-                                                题材分类 (Genre)
-                                            </label>
-                                            <select
-                                                className="w-full bg-stone-950 border border-stone-800 rounded-lg p-3 text-white focus:ring-2 focus:ring-orange-500 outline-none transition-all hover:border-orange-700"
-                                                value={inputs.genre}
-                                                onChange={(e) => setInputs(prev => ({ ...prev, genre: e.target.value }))}
-                                            >
-                                                <option value="">请选择题材...</option>
-                                                <optgroup label="男频">
-                                                    {TAGS.male.filter(t => t !== '全部').map(t => <option key={t} value={t}>{t}</option>)}
-                                                </optgroup>
-                                                <optgroup label="女频">
-                                                    {TAGS.female.filter(t => t !== '全部').map(t => <option key={t} value={t}>{t}</option>)}
-                                                </optgroup>
-                                            </select>
-                                        </div>
-                                        <div>
-                                            <label className="block text-sm font-medium text-stone-400 mb-2">
-                                                叙事视角
-                                            </label>
-                                            <select
-                                                className="w-full bg-stone-950 border border-stone-800 rounded-lg p-3 text-white focus:ring-2 focus:ring-orange-500 outline-none transition-all hover:border-orange-700"
-                                                value={inputs.perspective}
-                                                onChange={(e) => setInputs(prev => ({ ...prev, perspective: e.target.value }))}
-                                            >
-                                                <option value="">请选择视角...</option>
-                                                {NARRATIVE_PERSPECTIVES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
-                                            </select>
-                                        </div>
-                                        <div>
-                                            <label className="block text-sm font-medium text-stone-400 mb-2">
-                                                故事基调
-                                            </label>
-                                            <select
-                                                className="w-full bg-stone-950 border border-stone-800 rounded-lg p-3 text-white focus:ring-2 focus:ring-orange-500 outline-none transition-all hover:border-orange-700"
-                                                value={inputs.tone}
-                                                onChange={(e) => setInputs(prev => ({ ...prev, tone: e.target.value }))}
-                                            >
-                                                <option value="">请选择故事基调...</option>
-                                                {STORY_TONES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
-                                            </select>
-                                        </div>
-                                        <div>
-                                            <label className="block text-sm font-medium text-stone-400 mb-2">
-                                                结局倾向
-                                            </label>
-                                            <select
-                                                className="w-full bg-stone-950 border border-stone-800 rounded-lg p-3 text-white focus:ring-2 focus:ring-orange-500 outline-none transition-all hover:border-orange-700"
-                                                value={inputs.ending}
-                                                onChange={(e) => setInputs(prev => ({ ...prev, ending: e.target.value }))}
-                                            >
-                                                <option value="">请选择结局...</option>
-                                                {ENDING_TYPES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* 格式与要求组 */}
-                                <div className="bg-stone-800/30 border border-stone-700/50 rounded-lg p-4 sm:p-5">
-                                    <h3 className="text-sm font-semibold text-amber-400 uppercase mb-4 flex items-center">
-                                        <LayoutDashboard size={16} className="mr-2" />
-                                        格式与要求
-                                    </h3>
-                                    <div className="space-y-4">
-                                        <div>
-                                            <label className="block text-sm font-medium text-stone-400 mb-2">
-                                                小说名称
-                                            </label>
-                                            <div className="flex flex-col sm:flex-row gap-2">
-                                                <input
-                                                    type="text"
-                                                    className="flex-1 bg-stone-950 border border-stone-800 rounded-lg p-3 text-white focus:ring-2 focus:ring-orange-500 outline-none transition-all hover:border-orange-700"
-                                                    placeholder="输入小说名称或点击AI生成..."
-                                                    value={inputs.novelTitle}
-                                                    onChange={(e) => setInputs(prev => ({ ...prev, novelTitle: e.target.value }))}
-                                                />
-                                                <button
-                                                    type="button"
-                                                    onClick={async () => {
-                                                        // 检查API配置
-                                                        if (!apiConfig.apiKey) {
-                                                            setShowConfigModal(true);
-                                                            return;
-                                                        }
-
-                                                        if (!inputs.topic || !inputs.genre) {
-                                                            showAlert('请先填写核心脑洞和题材分类', "warning");
-                                                            return;
-                                                        }
-                                                        setIsGenerating(true);
-                                                        try {
-                                                            const systemPrompt = "你是一个专业的小说命名专家，擅长根据小说创意生成吸引人的书名。";
-                                                            const userPrompt = `根据以下信息生成一个吸引人的小说名称（只返回书名，不要其他内容）：\n核心创意：${inputs.topic}\n题材：${inputs.genre}\n基调：${inputs.tone || '未指定'}\n\n要求：\n1. 书名要简洁有力，3-8个字\n2. 要体现核心创意和题材特点\n3. 要有吸引力和记忆点\n4. 只返回书名本身，不要引号或其他说明`;
-
-                                                            const result = await generateContent(systemPrompt, userPrompt, apiConfig);
-                                                            const title = result.trim().replace(/["""]/g, '');
-                                                            setInputs(prev => ({ ...prev, novelTitle: title }));
-                                                        } catch (error) {
-                                                            console.error('生成书名失败:', error);
-                                                            showAlert('生成失败，请检查API配置', "error");
-                                                        } finally {
-                                                            setIsGenerating(false);
-                                                        }
-                                                    }}
-                                                    disabled={isGenerating || !inputs.topic || !inputs.genre}
-                                                    className="px-4 py-3 bg-orange-600 hover:bg-orange-500 text-white rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap flex items-center justify-center gap-2"
-                                                >
-                                                    {isGenerating ? <RefreshCw size={16} className="animate-spin" /> : <Sparkles size={16} />}
-                                                    AI生成
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                            <div>
-                                                <label className="block text-sm font-medium text-stone-400 mb-2">
-                                                    预计章节数
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    inputMode="numeric"
-                                                    pattern="[0-9]*"
-                                                    className="w-full bg-stone-950 border border-stone-800 rounded-lg p-3 text-white focus:ring-2 focus:ring-orange-500 outline-none transition-all hover:border-orange-700"
-                                                    value={inputs.numberOfChapters || ''}
-                                                    onChange={(e) => {
-                                                        const value = e.target.value;
-                                                        setInputs(prev => ({
-                                                            ...prev,
-                                                            numberOfChapters: value ? parseInt(value) : 0
-                                                        }));
-                                                    }}
-                                                    placeholder="12"
-                                                />
-                                            </div>
-                                            <div>
-                                                <label className="block text-sm font-medium text-stone-400 mb-2">
-                                                    每章字数
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    inputMode="numeric"
-                                                    pattern="[0-9]*"
-                                                    className="w-full bg-stone-950 border border-stone-800 rounded-lg p-3 text-white focus:ring-2 focus:ring-orange-500 outline-none transition-all hover:border-orange-700"
-                                                    value={inputs.wordCount || ''}
-                                                    onChange={(e) => {
-                                                        const value = e.target.value;
-                                                        setInputs(prev => ({
-                                                            ...prev,
-                                                            wordCount: value ? parseInt(value) : 0
-                                                        }));
-                                                    }}
-                                                    placeholder="2000"
-                                                />
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <label className="block text-sm font-medium text-stone-400 mb-2">
-                                                自定义特殊要求
-                                            </label>
-                                            <textarea
-                                                className="w-full min-h-[100px] sm:h-32 bg-stone-950 border border-stone-800 rounded-lg p-3 text-white focus:ring-2 focus:ring-orange-500 outline-none resize-none transition-all hover:border-orange-700"
-                                                placeholder="额外的设定要求，如：主角必须是反派、不要系统流、加入科幻元素..."
-                                                value={inputs.customRequirements}
-                                                onChange={(e) => setInputs(prev => ({ ...prev, customRequirements: e.target.value }))}
-                                            />
-                                        </div>
-                                    </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2 font-serif">
+                                        自定义特殊要求
+                                    </label>
+                                    <textarea
+                                        className="w-full min-h-[100px] bg-gray-50 border-0 rounded-lg p-3 text-gray-900 focus:ring-1 focus:ring-black outline-none resize-none transition-all"
+                                        placeholder="额外的设定要求..."
+                                        value={inputs.customRequirements}
+                                        onChange={(e) => setInputs(prev => ({ ...prev, customRequirements: e.target.value }))}
+                                    />
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        <div className="mt-8 flex justify-end items-center">
-                            <button
-                                onClick={() => {
-                                    // 检查核心脑洞是否填写
-                                    if (!inputs.topic.trim()) {
-                                        showAlert('请填写核心脑洞后才能继续下一步', "warning");
-                                        return;
-                                    }
-                                    // 标记创作初始化为已完成
-                                    setIsInitCompleted(true);
-                                    setCurrentStep(1);
-                                }}
-                                disabled={!inputs.topic.trim()}
-                                className="px-8 py-3 bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-500 hover:to-amber-500 text-white font-bold rounded-lg shadow-lg transition-all transform hover:scale-105 hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:shadow-lg"
-                            >
-                                下一步：生成核心架构
-                            </button>
-                        </div>
+                    <div className="flex justify-center pt-4">
+                        <button
+                            onClick={() => {
+                                if (!inputs.topic.trim()) {
+                                    showAlert('请填写核心脑洞', "warning");
+                                    return;
+                                }
+                                setIsInitCompleted(true);
+                                setCurrentStep(1);
+                            }}
+                            disabled={!inputs.topic.trim()}
+                            className="px-12 py-4 bg-black text-white font-bold rounded-full hover:shadow-xl hover:scale-105 transition-all disabled:opacity-50 disabled:hover:scale-100 flex items-center text-lg tracking-wide"
+                        >
+                            Next: Generate Architecture <ArrowRight size={20} className="ml-2" />
+                        </button>
                     </div>
                 </div>
             );
@@ -1534,11 +1516,11 @@ export default function App() {
 
         if (currentStepId === 'dna') {
             return (
-                <div className="flex flex-col space-y-4">
+                <div className="flex flex-col space-y-6">
                     {/* Action Bar */}
-                    <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3 bg-stone-900 p-4 rounded-xl border border-stone-800">
-                        <h2 className="text-lg sm:text-xl font-bold text-white flex items-center">
-                            {React.createElement(STEPS[currentStep].icon, { className: "mr-2 text-orange-400", size: 22 })}
+                    <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-4 bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
+                        <h2 className="text-xl font-serif font-bold text-gray-900 flex items-center">
+                            {React.createElement(STEPS[currentStep].icon, { className: "mr-2 text-gray-400", size: 22 })}
                             {STEPS[currentStep].title}
                         </h2>
                         <div className="flex space-x-2 sm:space-x-3 flex-wrap justify-end w-full sm:w-auto">
@@ -1547,7 +1529,7 @@ export default function App() {
                                     {!__HIDE_PROMPT_MANAGEMENT__ && (
                                         <button
                                             onClick={() => handleShowPrompt('JUDGE')}
-                                            className="text-stone-500 hover:text-white transition-colors p-3 rounded-lg hover:bg-stone-800"
+                                            className="text-gray-400 hover:text-gray-900 transition-colors p-3 rounded-lg hover:bg-gray-100"
                                             title="编辑判官提示词"
                                         >
                                             <FileText size={18} />
@@ -1556,9 +1538,9 @@ export default function App() {
                                     <button
                                         onClick={handleJudge}
                                         disabled={isJudging}
-                                        className={`px-4 py-3 bg-red-900/50 hover:bg-red-800/50 border border-red-800 text-red-200 rounded-lg flex items-center transition-all ${isJudging ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-lg'} min-h-[48px] justify-center`}
+                                        className={`px-4 py-2 bg-white border border-red-200 text-red-600 hover:bg-red-50 hover:border-red-300 rounded-lg flex items-center transition-all ${isJudging ? 'opacity-50 cursor-not-allowed' : 'shadow-sm'} min-h-[42px] justify-center font-serif`}
                                     >
-                                        {isJudging ? <RefreshCw size={18} className="mr-2 animate-spin" /> : <Gavel size={18} className="mr-2" />}
+                                        {isJudging ? <RefreshCw size={16} className="mr-2 animate-spin" /> : <Gavel size={16} className="mr-2" />}
                                         {isJudging ? '审判中...' : '判官审题'}
                                     </button>
                                 </>
@@ -1567,7 +1549,7 @@ export default function App() {
                             {content && (
                                 <button
                                     onClick={() => openCustomModal(STEPS[currentStep].title, (val) => handleGenerateStep(currentStepId, val))}
-                                    className="flex items-center px-4 py-3 bg-stone-800 hover:bg-stone-700 text-white rounded-lg transition-colors border border-stone-700 min-h-[48px] justify-center"
+                                    className="flex items-center px-4 py-2 bg-white hover:bg-gray-50 text-gray-700 rounded-lg transition-colors border border-gray-200 min-h-[42px] justify-center shadow-sm"
                                 >
                                     <RefreshCw size={16} className="mr-2" /> 重写/修改
                                 </button>
@@ -1575,51 +1557,52 @@ export default function App() {
                             <button
                                 onClick={() => handleGenerateStep(currentStepId)}
                                 disabled={isGenerating}
-                                className={`flex items-center px-5 py-3 bg-orange-600 hover:bg-orange-500 text-white font-bold rounded-lg transition-all ${isGenerating ? 'opacity-50 cursor-not-allowed' : 'shadow-lg hover:shadow-orange-500/20'} min-h-[48px] justify-center`}
+                                className={`flex items-center px-6 py-2 bg-black hover:bg-gray-800 text-white font-bold rounded-lg transition-all ${isGenerating ? 'opacity-50 cursor-not-allowed' : 'shadow-md hover:shadow-lg'} min-h-[42px] justify-center`}
                             >
-                                {isGenerating ? <RefreshCw className="animate-spin mr-2" /> : <Sparkles className="mr-2" />}
+                                {isGenerating ? <RefreshCw className="animate-spin mr-2" size={16} /> : <Sparkles className="mr-2" size={16} />}
                                 {content ? '重新生成' : '立即生成'}
                             </button>
                         </div>
                     </div>
 
                     {/* Content Area */}
-                    <div className="bg-stone-900 border border-stone-800 rounded-xl p-4 sm:p-6 overflow-y-auto min-h-[300px] max-h-[60vh] relative">
+                    <div className="bg-white border border-gray-100 rounded-xl p-6 sm:p-10 shadow-sm min-h-[400px] relative">
                         {isGenerating ? (
-                            <div className="absolute inset-0 flex flex-col items-center justify-center bg-stone-900/90 z-10">
-                                <RefreshCw className="animate-spin w-12 h-12 text-orange-500 mb-4" />
-                                <p className="text-orange-300 font-mono animate-pulse text-center px-4">{loadingMessage || "AI 正在深度思考构建中..."}</p>
+                            <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/90 z-10">
+                                <RefreshCw className="animate-spin w-10 h-10 text-gray-900 mb-6" />
+                                <p className="text-gray-500 font-serif italic text-lg animate-pulse text-center px-4">{loadingMessage || "AI 正在深度思考构建中..."}</p>
                             </div>
                         ) : content ? (
                             <div className="max-w-4xl mx-auto space-y-6">
-                                {/* 显示生成的核心DNA（包含基础设定） */}
                                 <div>
-                                    <div className="flex justify-end mb-4">
-                                        <button onClick={() => copyToClipboard(content as string)} className="text-stone-500 hover:text-white transition-colors p-3 rounded-lg hover:bg-stone-800"
+                                    <div className="flex justify-end mb-4 group opacity-0 hover:opacity-100 transition-opacity">
+                                        <button onClick={() => copyToClipboard(content as string)} className="text-gray-400 hover:text-gray-900 transition-colors p-2 rounded-lg hover:bg-gray-100"
                                             title="复制核心DNA"
                                         >
-                                            <Copy size={18} />
+                                            <Copy size={16} />
                                         </button>
                                     </div>
-                                    <MarkdownViewer content={content as string} />
+                                    <div className="prose prose-stone prose-lg max-w-none font-serif text-gray-800 leading-relaxed">
+                                        <MarkdownViewer content={content as string} />
+                                    </div>
                                 </div>
                             </div>
                         ) : (
-                            <div className="h-full flex flex-col items-center justify-center text-stone-500 opacity-50">
-                                <BookOpen size={64} className="mb-4" />
-                                <p>点击上方“生成”按钮开始构建</p>
+                            <div className="h-full flex flex-col items-center justify-center text-gray-300 py-20">
+                                <BookOpen size={64} className="mb-6 opacity-30" />
+                                <p className="font-serif text-xl">点击上方“生成”按钮开始构建</p>
                             </div>
                         )}
                     </div>
 
                     {/* Next Step Button */}
                     {currentStep < STEPS.length - 1 && content && (
-                        <div className="flex justify-end p-4 sm:p-0">
+                        <div className="flex justify-center p-8">
                             <button
                                 onClick={() => setCurrentStep(currentStep + 1)}
-                                className="w-full sm:w-auto px-8 py-3 bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-500 hover:to-amber-500 text-white font-bold rounded-lg shadow-lg transition-all transform hover:scale-105 hover:shadow-xl"
+                                className="px-8 py-3 bg-black hover:bg-gray-800 text-white font-bold rounded-full shadow-lg transition-all transform hover:scale-105 hover:shadow-xl flex items-center"
                             >
-                                下一步：{STEPS[currentStep + 1].title}
+                                下一步：{STEPS[currentStep + 1].title} <ArrowRight size={16} className="ml-2" />
                             </button>
                         </div>
                     )}
@@ -1631,146 +1614,121 @@ export default function App() {
             const history = generatedData.stateHistory || [];
             const currentArchive = history.find(h => h.chapterNum === viewArchiveChapter) || history[0];
 
-            if (!content && history.length === 0) {
-                return (
-                    <div className="h-full flex flex-col space-y-4">
-                        <div className="flex justify-between items-center bg-stone-900 p-4 rounded-xl border border-stone-800">
-                            <h2 className="text-xl font-bold text-white flex items-center">
-                                <Activity className="mr-2 text-orange-400" size={24} />
-                                角色状态库 (State Archives)
-                            </h2>
+            return (
+                <div className="h-full flex flex-col space-y-6">
+                    <div className="flex flex-wrap items-center justify-between bg-white p-4 rounded-xl border border-gray-100 shadow-sm gap-4">
+                        <h2 className="text-xl font-serif font-bold text-gray-900 flex items-center">
+                            <Activity className="mr-2 text-gray-400" size={20} />
+                            角色状态库
+                        </h2>
+
+                        {/* 中间提示信息 */}
+                        <div className="hidden sm:flex flex-1 justify-center mx-4">
+                            <div className="flex items-center text-xs text-gray-500 bg-gray-50 px-3 py-1.5 rounded-full border border-gray-200">
+                                <span className="mr-2">💡</span> 提示：完成章节创作后，点击 <Activity size={14} className="inline-block mx-1" /> 更新角色状态
+                            </div>
+                        </div>
+
+                        <div className="flex items-center space-x-2 sm:space-x-3 w-full sm:w-auto justify-end">
+                            {history.length > 0 && (
+                                <div className="relative flex-shrink-0">
+                                    <select
+                                        value={viewArchiveChapter}
+                                        onChange={(e) => setViewArchiveChapter(parseInt(e.target.value))}
+                                        className="appearance-none bg-white text-gray-900 pl-4 pr-10 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-1 focus:ring-black focus:border-black font-sans text-sm shadow-sm hover:border-gray-300 transition-all min-w-[140px]"
+                                    >
+                                        {history.map(h => (
+                                            <option key={h.chapterNum} value={h.chapterNum}>
+                                                {h.title}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <Clock className="absolute right-3 top-2.5 text-gray-400 pointer-events-none" size={16} />
+                                </div>
+                            )}
+
                             <button
                                 onClick={() => handleGenerateStep('state')}
                                 disabled={isGenerating}
-                                className={`flex items-center px-4 py-2 bg-orange-600 hover:bg-orange-500 text-white font-bold rounded-lg transition-all ${isGenerating ? 'opacity-50' : ''}`}
+                                className={`flex items-center px-4 py-2 bg-black hover:bg-gray-800 text-white font-bold rounded-lg transition-all shadow-sm hover:shadow-md ${isGenerating ? 'opacity-50 cursor-not-allowed' : ''} text-sm whitespace-nowrap`}
                             >
-                                {isGenerating ? <RefreshCw className="animate-spin mr-2" /> : <RefreshCw className="mr-2" />}
-                                生成初始状态
+                                {isGenerating ? <RefreshCw size={14} className="animate-spin mr-2" /> : <RefreshCw size={14} className="mr-2" />}
+                                {history.length > 0 ? '重置状态' : '生成初始状态'}
                             </button>
                         </div>
-                        <div className="flex flex-col items-center justify-center h-full text-stone-500">
-                            <Archive size={64} className="mb-4 opacity-50" />
-                            <p>暂无存档记录，请点击生成初始状态</p>
-                        </div>
                     </div>
-                );
-            } else {
-                return (
-                    <div className="h-full flex flex-col space-y-4">
-                        <div className="flex flex-wrap items-center justify-between bg-stone-900 p-4 rounded-xl border border-stone-800 shadow-lg gap-4">
-                            <h2 className="text-lg sm:text-xl font-bold text-white flex items-center">
-                                <Activity className="mr-2 text-orange-400" size={20} sm:size={24} />
-                                角色状态库 (State Archives)
-                            </h2>
 
-                            {/* 中间提示信息 - 在移动端隐藏 */}
-                            <div className="hidden sm:flex flex-1 justify-center mx-4">
-                                <div className="flex items-center text-sm text-amber-300 bg-amber-900/30 px-3 py-1 rounded-full border border-amber-800">
-                                    💡 提示：完成章节创作后，点击右上角 <Activity size={16} className="inline-block align-middle" /> 图标更新角色状态
-                                </div>
-                            </div>
-
-                            <div className="flex items-center space-x-2 sm:space-x-3 w-full sm:w-auto justify-end">
-                                {history.length > 0 && (
-                                    <div className="relative flex-shrink-0">
-                                        <select
-                                            value={viewArchiveChapter}
-                                            onChange={(e) => setViewArchiveChapter(parseInt(e.target.value))}
-                                            className="appearance-none bg-stone-800 text-white pl-4 pr-10 py-2 rounded-lg border border-stone-700 focus:outline-none focus:border-orange-500 font-mono text-xs sm:text-sm shadow-sm hover:border-stone-600 transition-all min-w-[120px]"
-                                        >
-                                            {history.map(h => (
-                                                <option key={h.chapterNum} value={h.chapterNum}>
-                                                    {h.title}
-                                                </option>
-                                            ))}
-                                        </select>
-                                        <Clock className="absolute right-3 top-2.5 text-stone-400 pointer-events-none" size={16} />
-                                    </div>
-                                )}
-
-                                <button
-                                    onClick={() => handleGenerateStep('state')}
-                                    disabled={isGenerating}
-                                    className={`flex items-center px-3 sm:px-4 py-2 bg-orange-600 hover:bg-orange-500 text-white font-bold rounded-lg transition-all shadow-md hover:shadow-lg ${isGenerating ? 'opacity-50 cursor-not-allowed' : ''} text-xs sm:text-sm whitespace-nowrap`}
-                                >
-                                    {isGenerating ? <RefreshCw size={14} className="animate-spin mr-2" /> : <RefreshCw size={14} className="mr-2" />}
-                                    {history.length > 0 ? '重置初始状态' : '生成初始状态'}
-                                </button>
-                            </div>
-                        </div>
-
-                        <div className="flex-1 bg-stone-900 border border-stone-800 rounded-xl shadow-lg overflow-hidden">
-                            {currentArchive ? (
-                                <div className="h-full grid grid-cols-1 lg:grid-cols-3 gap-0">
-                                    {/* 左侧信息区 */}
-                                    <div className="col-span-1 lg:col-span-1 p-4 sm:p-6 overflow-y-auto bg-stone-950/50 border-r border-stone-800">
-                                        <div className="space-y-4 sm:space-y-6">
-                                            <div className="bg-stone-800/30 rounded-xl p-4 sm:p-5 border border-stone-700/50 shadow-inner">
-                                                <h3 className="text-xs sm:text-sm font-bold text-orange-300 uppercase mb-2 sm:mb-3 flex items-center">
-                                                    <Globe size={14} sm:size={16} className="mr-2" />
-                                                    全局故事摘要
-                                                </h3>
-                                                <div className="max-h-48 sm:max-h-60 overflow-y-auto custom-scrollbar pr-2 text-sm">
-                                                    <MarkdownViewer content={currentArchive.globalSummary} compact />
-                                                </div>
-                                            </div>
-
-                                            <div className="bg-stone-800/30 rounded-xl p-4 sm:p-5 border border-stone-700/50 shadow-inner">
-                                                <h3 className="text-xs sm:text-sm font-bold text-emerald-300 uppercase mb-2 sm:mb-3 flex items-center">
-                                                    <FileText size={14} sm:size={16} className="mr-2" />
-                                                    本章摘要
-                                                </h3>
-                                                <div className="max-h-48 sm:max-h-60 overflow-y-auto custom-scrollbar pr-2 text-sm">
-                                                    <MarkdownViewer content={currentArchive.chapterSummary} compact />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {/* 右侧角色状态区 */}
-                                    <div className="col-span-1 lg:col-span-2 p-4 sm:p-6 min-h-full overflow-y-auto">
-                                        <div className="bg-stone-800/30 rounded-xl p-4 sm:p-5 border border-stone-700/50 shadow-inner">
-                                            <h3 className="text-xs sm:text-sm font-bold text-amber-300 uppercase mb-2 sm:mb-3 flex items-center">
-                                                <Users size={14} sm:size={16} className="mr-2" />
-                                                角色状态档案
+                    <div className="flex-1 bg-white border border-gray-100 rounded-xl shadow-sm overflow-hidden min-h-[500px]">
+                        {currentArchive ? (
+                            <div className="h-full grid grid-cols-1 lg:grid-cols-3 gap-0 divide-y lg:divide-y-0 lg:divide-x divide-gray-100">
+                                {/* 左侧信息区 */}
+                                <div className="col-span-1 lg:col-span-1 p-6 overflow-y-auto bg-gray-50/30">
+                                    <div className="space-y-6">
+                                        <div className="bg-white rounded-xl p-5 border border-gray-100 shadow-sm">
+                                            <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4 flex items-center">
+                                                <Globe size={14} className="mr-2" />
+                                                全局故事摘要
                                             </h3>
-                                            <div className="text-sm">
-                                                <MarkdownViewer content={currentArchive.characterState} />
+                                            <div className="max-h-60 overflow-y-auto custom-scrollbar pr-2 text-sm text-gray-700 leading-relaxed font-serif">
+                                                <MarkdownViewer content={currentArchive.globalSummary} compact />
+                                            </div>
+                                        </div>
+
+                                        <div className="bg-white rounded-xl p-5 border border-gray-100 shadow-sm">
+                                            <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4 flex items-center">
+                                                <FileText size={14} className="mr-2" />
+                                                本章摘要
+                                            </h3>
+                                            <div className="max-h-60 overflow-y-auto custom-scrollbar pr-2 text-sm text-gray-700 leading-relaxed font-serif">
+                                                <MarkdownViewer content={currentArchive.chapterSummary} compact />
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            ) : (
-                                <div className="flex flex-col items-center justify-center h-full text-stone-500">
-                                    <Archive size={48} className="mb-4 opacity-50" />
-                                    <p>暂无存档记录</p>
-                                </div>
-                            )}
-                        </div>
 
-                        {/* Next Step Button */}
-                        {currentStep < STEPS.length - 1 && (
-                            <div className="flex justify-end mt-4">
-                                <button
-                                    onClick={() => setCurrentStep(currentStep + 1)}
-                                    className="px-8 py-3 bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-500 hover:to-amber-500 text-white font-bold rounded-lg shadow-lg transition-all transform hover:scale-105 hover:shadow-xl"
-                                >
-                                    下一步：{STEPS[currentStep + 1].title}
-                                </button>
+                                {/* 右侧角色状态区 */}
+                                <div className="col-span-1 lg:col-span-2 p-8 min-h-full overflow-y-auto bg-white">
+                                    <div className="mb-6 pb-4 border-b border-gray-100">
+                                        <h3 className="text-sm font-bold text-gray-900 uppercase tracking-widest flex items-center">
+                                            <Users size={16} className="mr-2" />
+                                            角色状态档案
+                                        </h3>
+                                    </div>
+                                    <div className="text-gray-800 font-serif leading-relaxed">
+                                        <MarkdownViewer content={currentArchive.characterState} />
+                                    </div>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="flex flex-col items-center justify-center h-full text-gray-300">
+                                <Archive size={48} className="mb-4 opacity-30" />
+                                <p className="font-serif">暂无存档记录</p>
                             </div>
                         )}
                     </div>
-                );
-            }
+
+                    {/* Next Step Button */}
+                    {currentStep < STEPS.length - 1 && (
+                        <div className="flex justify-center mt-6">
+                            <button
+                                onClick={() => setCurrentStep(currentStep + 1)}
+                                className="px-8 py-3 bg-black hover:bg-gray-800 text-white font-bold rounded-full shadow-lg transition-all transform hover:scale-105 hover:shadow-xl flex items-center"
+                            >
+                                下一步：{STEPS[currentStep + 1].title} <ArrowRight size={16} className="ml-2" />
+                            </button>
+                        </div>
+                    )}
+                </div>
+            );
         }
 
         return (
-            <div className="flex flex-col space-y-4">
+            <div className="flex flex-col space-y-6">
                 {/* Action Bar */}
-                <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3 bg-stone-900 p-4 rounded-xl border border-stone-800">
+                <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-4 bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
                     {/* 左侧：标题 */}
-                    <h2 className="text-lg sm:text-xl font-bold text-white flex items-center">
-                        {React.createElement(STEPS[currentStep].icon, { className: "mr-2 text-orange-400", size: 22 })}
+                    <h2 className="text-xl font-serif font-bold text-gray-900 flex items-center">
+                        {React.createElement(STEPS[currentStep].icon, { className: "mr-2 text-gray-400", size: 22 })}
                         {STEPS[currentStep].title}
                     </h2>
 
@@ -1779,9 +1737,9 @@ export default function App() {
                         {currentStepId === 'plot' && (
                             <button
                                 onClick={() => setShowPlotStructureModal(true)}
-                                className="flex items-center px-4 py-2 bg-stone-800 hover:bg-stone-700 border border-stone-700 text-white rounded-lg transition-all hover:shadow-lg"
+                                className="flex items-center px-4 py-2 bg-gray-50 hover:bg-white border border-gray-200 text-gray-700 rounded-lg transition-all hover:shadow-sm"
                             >
-                                <LayoutList size={18} className="mr-2 text-orange-400" />
+                                <LayoutList size={16} className="mr-2 text-gray-500" />
                                 结构: {selectedPlotStructure}
                             </button>
                         )}
@@ -1789,32 +1747,10 @@ export default function App() {
 
                     {/* 右侧：其他按钮组 */}
                     <div className="flex space-x-2 sm:space-x-3 flex-wrap justify-end w-full sm:w-auto">
-                        {currentStepId === 'dna' && (
-                            <>
-                                {!__HIDE_PROMPT_MANAGEMENT__ && (
-                                    <button
-                                        onClick={() => handleShowPrompt('JUDGE')}
-                                        className="text-stone-500 hover:text-white transition-colors p-3 rounded-lg hover:bg-stone-800"
-                                        title="编辑判官提示词"
-                                    >
-                                        <FileText size={18} />
-                                    </button>
-                                )}
-                                <button
-                                    onClick={handleJudge}
-                                    disabled={isJudging}
-                                    className={`px-4 py-3 bg-red-900/50 hover:bg-red-800/50 border border-red-800 text-red-200 rounded-lg flex items-center transition-all ${isJudging ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-lg'} min-h-[48px] justify-center`}
-                                >
-                                    {isJudging ? <RefreshCw size={18} className="mr-2 animate-spin" /> : <Gavel size={18} className="mr-2" />}
-                                    {isJudging ? '审判中...' : '判官审题'}
-                                </button>
-                            </>
-                        )}
-
                         {content && (
                             <button
                                 onClick={() => openCustomModal(STEPS[currentStep].title, (val) => handleGenerateStep(currentStepId, val))}
-                                className="flex items-center px-4 py-3 bg-stone-800 hover:bg-stone-700 text-white rounded-lg transition-colors border border-stone-700 min-h-[48px] justify-center"
+                                className="flex items-center px-4 py-2 bg-white hover:bg-gray-50 text-gray-700 rounded-lg transition-colors border border-gray-200 min-h-[42px] justify-center shadow-sm"
                             >
                                 <RefreshCw size={16} className="mr-2" /> 重写/修改
                             </button>
@@ -1822,48 +1758,50 @@ export default function App() {
                         <button
                             onClick={() => handleGenerateStep(currentStepId)}
                             disabled={isGenerating}
-                            className={`flex items-center px-5 py-3 bg-orange-600 hover:bg-orange-500 text-white font-bold rounded-lg transition-all ${isGenerating ? 'opacity-50 cursor-not-allowed' : 'shadow-lg hover:shadow-orange-500/20'} min-h-[48px] justify-center`}
+                            className={`flex items-center px-6 py-2 bg-black hover:bg-gray-800 text-white font-bold rounded-lg transition-all ${isGenerating ? 'opacity-50 cursor-not-allowed' : 'shadow-md hover:shadow-lg'} min-h-[42px] justify-center`}
                         >
-                            {isGenerating ? <RefreshCw className="animate-spin mr-2" /> : <Sparkles className="mr-2" />}
+                            {isGenerating ? <RefreshCw className="animate-spin mr-2" size={16} /> : <Sparkles className="mr-2" size={16} />}
                             {content ? '重新生成' : '立即生成'}
                         </button>
                     </div>
                 </div>
 
                 {/* Content Area */}
-                <div className="bg-stone-900 border border-stone-800 rounded-xl p-4 sm:p-6 overflow-y-auto min-h-[300px] max-h-[60vh] relative">
+                <div className="bg-white border border-gray-100 rounded-xl p-6 sm:p-10 shadow-sm min-h-[400px] relative">
                     {isGenerating ? (
-                        <div className="absolute inset-0 flex flex-col items-center justify-center bg-stone-900/90 z-10">
-                            <RefreshCw className="animate-spin w-12 h-12 text-orange-500 mb-4" />
-                            <p className="text-orange-300 font-mono animate-pulse text-center px-4">{loadingMessage || "AI 正在深度思考构建中..."}</p>
+                        <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/90 z-10">
+                            <RefreshCw className="animate-spin w-10 h-10 text-gray-900 mb-6" />
+                            <p className="text-gray-500 font-serif italic text-lg animate-pulse text-center px-4">{loadingMessage || "AI 正在深度思考构建中..."}</p>
                         </div>
                     ) : content ? (
                         <div className="max-w-4xl mx-auto space-y-6">
-                            <div className="flex justify-end mb-4">
-                                <button onClick={() => copyToClipboard(content as string)} className="text-stone-500 hover:text-white transition-colors p-3 rounded-lg hover:bg-stone-800"
+                            <div className="flex justify-end mb-4 group opacity-0 hover:opacity-100 transition-opacity">
+                                <button onClick={() => copyToClipboard(content as string)} className="text-gray-400 hover:text-gray-900 transition-colors p-2 rounded-lg hover:bg-gray-100"
                                     title="复制内容"
                                 >
-                                    <Copy size={18} />
+                                    <Copy size={16} />
                                 </button>
                             </div>
-                            <MarkdownViewer content={cleanCodeBlock(content as string)} />
+                            <div className="prose prose-stone prose-lg max-w-none font-serif text-gray-800 leading-relaxed">
+                                <MarkdownViewer content={cleanCodeBlock(content as string)} />
+                            </div>
                         </div>
                     ) : (
-                        <div className="h-full flex flex-col items-center justify-center text-stone-500 opacity-50">
-                            <BookOpen size={64} className="mb-4" />
-                            <p>点击上方“生成”按钮开始构建</p>
+                        <div className="h-full flex flex-col items-center justify-center text-gray-300 py-20">
+                            <BookOpen size={64} className="mb-6 opacity-30" />
+                            <p className="font-serif text-xl">点击上方“生成”按钮开始构建</p>
                         </div>
                     )}
                 </div>
 
                 {/* Next Step Button */}
                 {currentStep < STEPS.length - 1 && content && (
-                    <div className="flex justify-end p-4 sm:p-0">
+                    <div className="flex justify-center p-8">
                         <button
                             onClick={() => setCurrentStep(currentStep + 1)}
-                            className="w-full sm:w-auto px-8 py-3 bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-500 hover:to-amber-500 text-white font-bold rounded-lg shadow-lg transition-all transform hover:scale-105 hover:shadow-xl"
+                            className="px-8 py-3 bg-black hover:bg-gray-800 text-white font-bold rounded-full shadow-lg transition-all transform hover:scale-105 hover:shadow-xl flex items-center"
                         >
-                            下一步：{STEPS[currentStep + 1].title}
+                            下一步：{STEPS[currentStep + 1].title} <ArrowRight size={16} className="ml-2" />
                         </button>
                     </div>
                 )}
@@ -1963,125 +1901,131 @@ export default function App() {
             {/* Mobile Sidebar Overlay */}
             {isSidebarOpen && (
                 <div
-                    className="fixed inset-0 bg-black/50 z-10 md:hidden"
+                    className="fixed inset-0 bg-black/20 backdrop-blur-sm z-10 md:hidden"
                     onClick={() => setIsSidebarOpen(false)}
                 />
             )}
 
-            {/* Sidebar */}
-            <div className={`w-56 sm:w-64 bg-stone-900 border-r border-stone-800 flex flex-col fixed inset-y-0 left-0 z-20 transform transition-transform duration-300 md:static md:transform-none ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:flex`}>
-                <div className="p-6 border-b border-stone-800">
+            {/* Sidebar - Minimalist White Design */}
+            <div className={`w-56 sm:w-64 bg-white border-r border-gray-100 flex flex-col fixed inset-y-0 left-0 z-20 transform transition-transform duration-300 md:static md:transform-none ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:flex shadow-sm`}>
+                <div className="p-8 border-b border-gray-100 flex flex-col items-center">
                     <img
                         src={unclecatlogo}
-                        alt="猫叔 智能小说创作助手"
-                        className="w-full h-auto rounded-xl"
+                        alt="Art Mind"
+                        className="w-16 h-16 rounded-full mb-3 shadow-sm grayscale hover:grayscale-0 transition-all duration-500"
                     />
+                    <h1 className="font-serif text-xl font-bold tracking-wider text-gray-900">Art Mind <span className="text-gray-400 font-light text-sm align-top">3.0</span></h1>
+                    <p className="font-hand text-gray-400 text-lg -rotate-2 mt-1">由 AI 驱动的深度美学叙事</p>
                 </div>
-                <div className="flex-1 overflow-y-auto p-4 space-y-2">
+
+                <div className="flex-1 overflow-y-auto px-4 py-6 space-y-1">
                     {STEPS.map((step, idx) => (
                         <StepCard
                             key={step.id}
                             title={step.title}
                             icon={step.icon}
                             isActive={currentStep === idx}
-                            isCompleted={idx === 0 ? (
-                                // 创作初始化完成条件：与其他步骤保持一致，永久标记为已完成
-                                isInitCompleted
-                            ) : (step.id === 'writing' ? generatedData.chapters.length > 0 : (idx > 0 && idx < 7 ? !!generatedData[step.id as keyof GeneratedData] : false))}
+                            isCompleted={idx === 0 ? isInitCompleted : (step.id === 'writing' ? generatedData.chapters.length > 0 : (idx > 0 && idx < 7 ? !!generatedData[step.id as keyof GeneratedData] : false))}
                             onClick={() => setCurrentStep(idx)}
                             onShowPrompt={!__HIDE_PROMPT_MANAGEMENT__ && step.promptKey ? () => handleShowPrompt(step.promptKey!) : undefined}
                         />
                     ))}
                 </div>
 
-                {/* 导入导出重置功能 */}
-                <div className="p-4 border-t border-stone-800">
-                    <div className="space-y-2">
-                        <div className="flex gap-2">
-                            <button
-                                onClick={handleImport}
-                                className="flex-1 bg-stone-800 hover:bg-stone-700 rounded-lg py-2 px-3 flex items-center justify-center gap-2 text-sm font-medium transition-colors border border-stone-700"
-                            >
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-400"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>
-                                导入
-                            </button>
-                            <button
-                                onClick={handleExport}
-                                className="flex-1 bg-stone-800 hover:bg-stone-700 rounded-lg py-2 px-3 flex items-center justify-center gap-2 text-sm font-medium transition-colors border border-stone-700"
-                            >
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-emerald-400"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>
-                                导出
-                            </button>
-                        </div>
+                {/* 导入导出重置功能 - 底部极简风格 */}
+                <div className="p-4 border-t border-gray-100 bg-gray-50/50">
+                    <div className="grid grid-cols-2 gap-2 mb-3">
                         <button
-                            onClick={handleReset}
-                            className="w-full bg-stone-800 hover:bg-stone-700 rounded-lg py-2 px-3 flex items-center justify-center gap-2 text-sm font-medium transition-colors border border-stone-700"
+                            onClick={handleImport}
+                            className="flex items-center justify-center gap-2 py-2 px-3 rounded-md text-xs font-medium text-gray-600 hover:text-gray-900 hover:bg-white border border-gray-200 hover:border-gray-300 transition-all shadow-sm"
                         >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-amber-400"><path d="M3 6h18" /><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" /><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" /><line x1="10" y1="11" x2="10" y2="17" /><line x1="14" y1="11" x2="14" y2="17" /></svg>
-                            清空/重置
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>
+                            导入
+                        </button>
+                        <button
+                            onClick={handleExport}
+                            className="flex items-center justify-center gap-2 py-2 px-3 rounded-md text-xs font-medium text-gray-600 hover:text-gray-900 hover:bg-white border border-gray-200 hover:border-gray-300 transition-all shadow-sm"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>
+                            导出
                         </button>
                     </div>
+                    <button
+                        onClick={handleReset}
+                        className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-md text-xs font-medium text-gray-500 hover:text-red-600 hover:bg-red-50 border border-transparent hover:border-red-100 transition-all"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18" /><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" /><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" /><line x1="10" y1="11" x2="10" y2="17" /><line x1="14" y1="11" x2="14" y2="17" /></svg>
+                        重置项目
+                    </button>
                 </div>
 
-                <div className="p-4 border-t border-stone-800 text-xs">
-                    <div className="space-y-1">
-                        <div className="flex items-center justify-between gap-2">
-                            <div className="flex items-center gap-2 flex-1 min-w-0">
-                                <div className={`w-2 h-2 rounded-full shrink-0 ${apiConfig.apiKey ? 'bg-emerald-400' : 'bg-stone-600'}`} />
-                                <span className="text-stone-400 font-medium truncate">
-                                    {apiConfig.provider === 'google' ? 'Google Gemini' :
-                                        apiConfig.provider === 'deepseek' ? 'DeepSeek' :
-                                            apiConfig.provider === 'openai' ? 'OpenAI' :
-                                                apiConfig.provider === 'claude' ? 'Anthropic Claude' :
-                                                    apiConfig.provider === 'custom' ? '自定义' : '未配置'}
-                                </span>
-                            </div>
+                <div className="p-4 border-t border-gray-100 text-xs bg-gray-50">
+                    <div className="flex items-center justify-between gap-2 mb-2">
+                        <div className="flex items-center gap-2 flex-1 min-w-0">
+                            <div className={`w-1.5 h-1.5 rounded-full shrink-0 ${apiConfig.apiKey ? 'bg-black' : 'bg-gray-300'}`} />
+                            <span className="text-gray-500 font-medium truncate">
+                                {apiConfig.provider === 'google' ? 'Google Gemini' :
+                                    apiConfig.provider === 'deepseek' ? 'DeepSeek' :
+                                        apiConfig.provider === 'openai' ? 'OpenAI' :
+                                            apiConfig.provider === 'claude' ? 'Claude' :
+                                                apiConfig.provider === 'custom' ? 'Custom' : '未配置'}
+                            </span>
+                        </div>
+                        <div className="flex gap-1">
                             {!__HIDE_PROMPT_MANAGEMENT__ && (
                                 <button
                                     onClick={() => setShowPromptManager(true)}
-                                    className="text-stone-500 hover:text-stone-300 p-1 rounded hover:bg-stone-800 transition-colors shrink-0"
+                                    className="text-gray-400 hover:text-gray-900 p-1 rounded hover:bg-gray-200 transition-colors"
                                     title="提示词管理"
                                 >
-                                    <FileText size={14} />
+                                    <FileText size={12} />
                                 </button>
                             )}
-                        </div>
-                        <div className="flex items-center justify-between gap-2">
-                            <div className="text-stone-500 text-[10px] ml-4 truncate flex-1 min-w-0" title={apiConfig.textModel}>
-                                {/* 对于自定义模型，显示用户输入的模型名称；其他模型显示textModel */}
-                                {(apiConfig.provider === 'custom' || apiConfig.textModel === 'custom') ?
-                                    (apiConfig.customTextModel || apiConfig.textModel || '未选择模型') :
-                                    (apiConfig.textModel || '未选择模型')}
-                            </div>
                             <button
                                 onClick={() => setShowConfigModal(true)}
-                                className="text-stone-500 hover:text-stone-300 p-1 rounded hover:bg-stone-800 transition-colors shrink-0"
+                                className="text-gray-400 hover:text-gray-900 p-1 rounded hover:bg-gray-200 transition-colors"
                                 title="配置接口"
                             >
-                                <Settings size={14} />
+                                <Settings size={12} />
                             </button>
                         </div>
                     </div>
-                    <div className="mt-3 pt-3 border-t border-stone-800/50 text-stone-600 text-center space-y-0.5">
-                        <div className="text-[10px]">基于猫叔的AI小说创作系统制作</div>
-                        <div className="text-[10px]">公众号：AI替代人类</div>
+                    <div className="text-[10px] text-gray-400 text-center font-serif italic">
+                        Art Mind © 2025
                     </div>
                 </div>
             </div>
 
-            <div className="flex-1 flex flex-col min-w-0">
-                <header className="md:hidden p-4 bg-stone-900 border-b border-stone-800 flex items-center justify-between">
+            <div className="flex-1 flex flex-col min-w-0 bg-stone-50 overflow-hidden relative">
+                {/* Decorative background elements */}
+                <div className="absolute top-0 right-0 w-64 h-64 bg-gray-100 rounded-full blur-3xl opacity-30 -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
+                <div className="absolute bottom-0 left-0 w-96 h-96 bg-gray-100 rounded-full blur-3xl opacity-30 translate-y-1/2 -translate-x-1/2 pointer-events-none"></div>
+
+                <header className="md:hidden p-4 bg-white border-b border-gray-100 flex items-center justify-between z-10 shadow-sm">
                     <button
                         onClick={() => setIsSidebarOpen(true)}
-                        className="p-2 rounded-lg hover:bg-stone-800 transition-colors mr-2"
+                        className="p-2 rounded-lg hover:bg-gray-100 transition-colors mr-2 text-gray-600"
                         title="展开侧边栏"
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="18" x2="21" y2="18" /></svg>
+                        <List size={20} />
                     </button>
-                    <span className="font-bold">猫叔 智能小说创作助手</span>
-                    <span className="text-sm text-stone-400">{STEPS[currentStep].title}</span>
+                    <span className="font-serif font-bold text-gray-900">Art Mind</span>
+                    <span className="text-xs text-gray-400 font-hand">{STEPS[currentStep].title}</span>
                 </header>
-                <main className="flex-1 p-3 md:p-4 lg:p-8 pb-20 overflow-auto h-full">
+
+                <main className="flex-1 p-4 lg:p-12 overflow-auto h-full relative z-0">
+                    {/* Top Step Indicator for Desktop */}
+                    <div className="hidden md:flex justify-center mb-12">
+                        <div className="flex items-center space-x-4">
+                            <div className="h-px w-12 bg-gray-200"></div>
+                            <div className="w-8 h-8 rounded-full border border-black flex items-center justify-center bg-black text-white font-serif italic shadow-lg">
+                                {['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII'][currentStep] || currentStep + 1}
+                            </div>
+                            <h2 className="text-2xl font-serif font-bold text-gray-900 tracking-tight">{STEPS[currentStep].title}</h2>
+                            <div className="h-px w-12 bg-gray-200"></div>
+                        </div>
+                    </div>
+
                     {renderContent()}
                 </main>
             </div>

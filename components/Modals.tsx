@@ -101,22 +101,22 @@ export const PromptManagerModal: React.FC<{
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
-            <div className="bg-stone-950 border border-stone-800 rounded-xl w-full max-w-6xl h-[90vh] flex shadow-2xl animate-in fade-in zoom-in-95 overflow-hidden">
+        <div className="fixed inset-0 bg-white/80 flex items-center justify-center z-50 p-4 backdrop-blur-md">
+            <div className="bg-white border border-gray-100 rounded-xl w-full max-w-6xl h-[90vh] flex shadow-2xl animate-in fade-in zoom-in-95 overflow-hidden ring-1 ring-black/5">
 
                 {/* Left Sidebar: Prompt List */}
-                <div className="w-64 md:w-80 bg-stone-900 border-r border-stone-800 flex flex-col">
-                    <div className="p-4 border-b border-stone-800 bg-stone-900">
-                        <h3 className="text-lg font-bold text-white flex items-center mb-3">
-                            <FileText className="mr-2 text-orange-400" size={20} /> 提示词管理
+                <div className="w-64 md:w-80 bg-gray-50 border-r border-gray-100 flex flex-col">
+                    <div className="p-4 border-b border-gray-100 bg-white">
+                        <h3 className="text-lg font-serif font-bold text-gray-900 flex items-center mb-3">
+                            <FileText className="mr-2 text-black" size={20} /> 提示词管理
                         </h3>
                         <div className="relative">
-                            <Search className="absolute left-3 top-2.5 text-stone-500" size={14} />
+                            <Search className="absolute left-3 top-2.5 text-gray-400" size={14} />
                             <input
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                                 placeholder="搜索提示词..."
-                                className="w-full bg-stone-950 border border-stone-700 text-stone-300 text-sm rounded-lg pl-9 pr-3 py-2 focus:border-orange-500 outline-none"
+                                className="w-full bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-lg pl-9 pr-3 py-2 focus:border-black focus:ring-1 focus:ring-black/5 outline-none transition-all placeholder:text-gray-400"
                             />
                         </div>
                     </div>
@@ -138,15 +138,15 @@ export const PromptManagerModal: React.FC<{
                                         }
                                     }}
                                     className={`w-full text-left px-3 py-3 rounded-lg text-sm flex items-center justify-between transition-all ${isActive
-                                        ? 'bg-orange-900/30 text-orange-300 border border-orange-800/50'
-                                        : 'text-stone-400 hover:bg-stone-800 hover:text-stone-200 border border-transparent'
+                                        ? 'bg-black text-white shadow-md'
+                                        : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900 border border-transparent'
                                         }`}
                                 >
                                     <div className="flex flex-col truncate">
                                         <span className="font-bold truncate">{PROMPT_NAMES[key] || key}</span>
-                                        <span className="text-[10px] opacity-50 font-mono truncate">{key}</span>
+                                        <span className={`text-[10px] font-mono truncate ${isActive ? 'text-gray-400' : 'text-gray-400'}`}>{key}</span>
                                     </div>
-                                    {isCustomized && <div className="w-2 h-2 rounded-full bg-amber-500 shrink-0 ml-2" title="已自定义修改" />}
+                                    {isCustomized && <div className={`w-2 h-2 rounded-full shrink-0 ml-2 ${isActive ? 'bg-emerald-400' : 'bg-emerald-500'}`} title="已自定义修改" />}
                                 </button>
                             )
                         })}
@@ -154,21 +154,21 @@ export const PromptManagerModal: React.FC<{
                 </div>
 
                 {/* Right Content: Editor */}
-                <div className="flex-1 flex flex-col bg-stone-950 min-w-0">
+                <div className="flex-1 flex flex-col bg-white min-w-0">
                     {/* Header */}
-                    <div className="p-4 border-b border-stone-800 bg-stone-900/50 flex justify-between items-center h-16 shrink-0">
+                    <div className="p-4 border-b border-gray-100 bg-white flex justify-between items-center h-16 shrink-0">
                         <div className="flex flex-col">
-                            <h2 className="text-white font-bold flex items-center">
+                            <h2 className="text-gray-900 font-serif font-bold text-lg flex items-center">
                                 {PROMPT_NAMES[selectedKey] || selectedKey}
                             </h2>
-                            <span className="text-xs text-stone-500 font-mono">Key: {selectedKey}</span>
+                            <span className="text-xs text-gray-400 font-mono">Key: {selectedKey}</span>
                         </div>
                         <div className="flex items-center space-x-3">
-                            {unsavedChanges && <span className="text-xs text-amber-500 animate-pulse flex items-center"><AlertCircle size={12} className="mr-1" /> 未保存</span>}
+                            {unsavedChanges && <span className="text-xs text-amber-600 animate-pulse flex items-center font-medium"><AlertCircle size={12} className="mr-1" /> 未保存</span>}
 
                             <button
                                 onClick={handleResetCurrent}
-                                className="text-xs flex items-center text-stone-500 hover:text-red-400 px-3 py-1.5 rounded hover:bg-stone-800 transition-colors border border-stone-700 hover:border-red-900"
+                                className="text-xs flex items-center text-gray-500 hover:text-red-500 px-3 py-1.5 rounded hover:bg-red-50 transition-colors border border-gray-200 hover:border-red-200"
                                 title="恢复为系统默认提示词"
                             >
                                 <RotateCcw size={14} className="mr-1.5" /> 恢复默认
@@ -177,9 +177,9 @@ export const PromptManagerModal: React.FC<{
                             <button
                                 onClick={handleSaveCurrent}
                                 disabled={!unsavedChanges}
-                                className={`text-xs flex items-center px-4 py-1.5 rounded font-bold transition-all ${unsavedChanges
-                                    ? 'bg-orange-600 hover:bg-orange-500 text-white shadow-lg shadow-orange-900/20'
-                                    : 'bg-stone-800 text-stone-500 cursor-not-allowed'
+                                className={`text-xs flex items-center px-4 py-1.5 rounded-lg font-bold transition-all ${unsavedChanges
+                                    ? 'bg-black hover:bg-gray-800 text-white shadow-lg'
+                                    : 'bg-gray-100 text-gray-400 cursor-not-allowed'
                                     }`}
                             >
                                 <Save size={14} className="mr-1.5" /> {unsavedChanges ? '保存修改' : '已保存'}
@@ -188,24 +188,24 @@ export const PromptManagerModal: React.FC<{
                     </div>
 
                     {/* Editor */}
-                    <div className="flex-1 relative flex flex-col">
-                        <div className="absolute inset-0 p-4">
+                    <div className="flex-1 relative flex flex-col bg-gray-50/30">
+                        <div className="absolute inset-0 p-6">
                             <textarea
                                 value={currentValue}
                                 onChange={handleChange}
-                                className="w-full h-full bg-stone-900/50 border border-stone-800 rounded-xl p-6 font-mono text-sm text-stone-300 resize-none outline-none focus:border-orange-500/50 focus:bg-stone-900 transition-all custom-scrollbar leading-relaxed"
+                                className="w-full h-full bg-white border border-gray-200 rounded-xl p-6 font-mono text-sm text-gray-800 resize-none outline-none focus:border-black focus:ring-1 focus:ring-black/5 transition-all custom-scrollbar leading-relaxed shadow-sm"
                                 spellCheck={false}
                             />
                         </div>
                     </div>
 
                     {/* Footer / Info */}
-                    <div className="p-3 border-t border-stone-800 bg-stone-900 text-xs text-stone-500 flex justify-between items-center shrink-0">
+                    <div className="p-3 border-t border-gray-100 bg-white text-xs text-gray-500 flex justify-between items-center shrink-0">
                         <div className="flex items-center">
-                            <AlertCircle size={12} className="mr-1.5 text-orange-500" />
+                            <AlertCircle size={12} className="mr-1.5 text-gray-400" />
                             提示：修改后的提示词需要手动保存才能生效。请确保保留关键的变量占位符（如 {'{STORY_DNA}'}）。
                         </div>
-                        <button onClick={onClose} className="hover:text-white transition-colors">关闭窗口 (ESC)</button>
+                        <button onClick={onClose} className="hover:text-gray-900 transition-colors font-medium">关闭窗口 (ESC)</button>
                     </div>
                 </div>
             </div>
@@ -235,30 +235,30 @@ export const PlotStructureModal: React.FC<{
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
-            <div className="bg-stone-900 border border-stone-800 rounded-xl w-full max-w-3xl h-[85vh] flex flex-col shadow-2xl animate-in fade-in zoom-in-95">
+        <div className="fixed inset-0 bg-white/80 flex items-center justify-center z-50 p-4 backdrop-blur-md">
+            <div className="bg-white border border-gray-100 rounded-xl w-full max-w-3xl h-[85vh] flex flex-col shadow-2xl animate-in fade-in zoom-in-95 ring-1 ring-black/5">
                 {/* 标题栏 */}
-                <div className="flex justify-between items-center p-4 border-b border-stone-800 bg-stone-900/50 rounded-t-xl">
-                    <h3 className="text-lg font-bold text-white flex items-center">
-                        <svg className="w-5 h-5 text-orange-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="flex justify-between items-center p-4 border-b border-gray-100 bg-white rounded-t-xl">
+                    <h3 className="text-lg font-serif font-bold text-gray-900 flex items-center">
+                        <svg className="w-5 h-5 text-black mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                         </svg>
                         选择剧情结构
                     </h3>
-                    <button onClick={onClose} className="text-stone-400 hover:text-white transition-colors">
+                    <button onClick={onClose} className="text-gray-400 hover:text-gray-900 transition-colors">
                         <X size={24} />
                     </button>
                 </div>
 
                 {/* 搜索栏 */}
-                <div className="p-4 border-b border-stone-800 bg-stone-950/50">
+                <div className="p-4 border-b border-gray-100 bg-gray-50/50">
                     <div className="relative">
-                        <Search className="absolute left-3 top-2.5 text-stone-500" size={16} />
+                        <Search className="absolute left-3 top-2.5 text-gray-400" size={16} />
                         <input
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                             placeholder="搜索结构名称或描述..."
-                            className="w-full bg-stone-800 border border-stone-700 text-stone-300 text-sm rounded-lg pl-10 pr-4 py-2.5 focus:border-orange-500 outline-none transition-all"
+                            className="w-full bg-white border border-gray-200 text-gray-900 text-sm rounded-lg pl-10 pr-4 py-2.5 focus:border-black focus:ring-1 focus:ring-black/5 outline-none transition-all placeholder:text-gray-400 shadow-sm"
                         />
                     </div>
                 </div>
@@ -266,7 +266,7 @@ export const PlotStructureModal: React.FC<{
                 {/* 结构列表 */}
                 <div className="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar">
                     {filteredStructures.length === 0 ? (
-                        <div className="h-full flex items-center justify-center text-stone-500">
+                        <div className="h-full flex items-center justify-center text-gray-500">
                             <p>未找到匹配的剧情结构</p>
                         </div>
                     ) : (
@@ -285,15 +285,15 @@ export const PlotStructureModal: React.FC<{
                                         onSelectStructure(structure.name);
                                         onClose();
                                     }}
-                                    className={`p-4 rounded-lg border transition-all cursor-pointer hover:shadow-lg ${selectedStructure === structure.name
-                                        ? 'bg-orange-900/30 border-orange-800/50 text-orange-300'
-                                        : 'bg-stone-800/50 border-stone-700 text-stone-300 hover:bg-stone-800/80 hover:border-stone-600'
+                                    className={`p-4 rounded-lg border transition-all cursor-pointer hover:shadow-md ${selectedStructure === structure.name
+                                        ? 'bg-black text-white border-black shadow-md'
+                                        : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50 hover:border-gray-300'
                                         }`}
                                 >
-                                    <h4 className="text-lg font-bold mb-2 text-white">
+                                    <h4 className={`text-lg font-bold mb-2 font-serif ${selectedStructure === structure.name ? 'text-white' : 'text-gray-900'}`}>
                                         {formattedName}
                                     </h4>
-                                    <div className="text-sm whitespace-pre-line">
+                                    <div className={`text-sm whitespace-pre-line leading-relaxed ${selectedStructure === structure.name ? 'text-gray-300' : 'text-gray-500'}`}>
                                         {structure.description}
                                     </div>
                                 </div>
@@ -334,11 +334,11 @@ export const PromptEditorModal: React.FC<{
 
     return (
         <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
-            <div className="bg-stone-900 border border-stone-800 rounded-xl w-full max-w-3xl h-[85vh] flex flex-col shadow-2xl animate-in fade-in zoom-in-95">
-                <div className="flex justify-between items-center p-4 border-b border-stone-800 bg-stone-900/50 h-16">
+            <div className="bg-white border border-gray-100 rounded-xl w-full max-w-3xl h-[85vh] flex flex-col shadow-2xl animate-in fade-in zoom-in-95 ring-1 ring-black/5">
+                <div className="flex justify-between items-center p-4 border-b border-gray-100 bg-white h-16">
                     <div className="flex items-center space-x-4">
-                        <h3 className="text-lg font-bold text-white flex items-center">
-                            <FileText className="mr-2 text-orange-400" size={20} />
+                        <h3 className="text-lg font-serif font-bold text-gray-900 flex items-center">
+                            <FileText className="mr-2 text-black" size={20} />
                             {relatedKeys && relatedKeys.length > 1 ? '切换提示词专家：' : '编辑系统提示词'}
                         </h3>
 
@@ -347,7 +347,7 @@ export const PromptEditorModal: React.FC<{
                                 <select
                                     value={currentKey}
                                     onChange={(e) => onKeyChange(e.target.value)}
-                                    className="appearance-none bg-stone-800 border border-stone-600 text-white text-sm rounded pl-3 pr-8 py-1 focus:border-orange-500 focus:outline-none cursor-pointer font-bold"
+                                    className="appearance-none bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded pl-3 pr-8 py-1 focus:border-black focus:outline-none cursor-pointer font-bold hover:bg-gray-100 transition-colors"
                                 >
                                     {relatedKeys.map(key => (
                                         <option key={key} value={key}>
@@ -355,7 +355,7 @@ export const PromptEditorModal: React.FC<{
                                         </option>
                                     ))}
                                 </select>
-                                <ChevronDown className="absolute right-2 top-1.5 text-stone-400 pointer-events-none" size={14} />
+                                <ChevronDown className="absolute right-2 top-1.5 text-gray-500 pointer-events-none" size={14} />
                             </div>
                         )}
 
@@ -365,7 +365,7 @@ export const PromptEditorModal: React.FC<{
                                 <select
                                     value={currentChapter}
                                     onChange={(e) => onChapterChange?.(parseInt(e.target.value))}
-                                    className="appearance-none bg-stone-800 border border-stone-600 text-white text-sm rounded pl-3 pr-8 py-1 focus:border-orange-500 focus:outline-none cursor-pointer font-bold"
+                                    className="appearance-none bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded pl-3 pr-8 py-1 focus:border-black focus:outline-none cursor-pointer font-bold hover:bg-gray-100 transition-colors"
                                 >
                                     {/* 根据当前提示词决定显示哪些章节 */}
                                     {currentKey === 'CHAPTER_1' ? (
@@ -382,7 +382,7 @@ export const PromptEditorModal: React.FC<{
                                         ))
                                     )}
                                 </select>
-                                <ChevronDown className="absolute right-2 top-1.5 text-stone-400 pointer-events-none" size={14} />
+                                <ChevronDown className="absolute right-2 top-1.5 text-gray-500 pointer-events-none" size={14} />
                             </div>
                         )}
                     </div>
@@ -390,28 +390,28 @@ export const PromptEditorModal: React.FC<{
                     <div className="flex items-center space-x-2">
                         <button
                             onClick={() => setValue(defaultPrompt)}
-                            className="text-xs flex items-center text-stone-400 hover:text-amber-400 px-3 py-1 rounded hover:bg-stone-800 transition-colors"
+                            className="text-xs flex items-center text-gray-400 hover:text-amber-600 px-3 py-1 rounded hover:bg-amber-50 transition-colors"
                             title="恢复默认提示词"
                         >
                             <RotateCcw size={14} className="mr-1" /> 恢复默认
                         </button>
-                        <button onClick={onClose} className="text-stone-400 hover:text-white transition-colors">
+                        <button onClick={onClose} className="text-gray-400 hover:text-gray-900 transition-colors">
                             <X size={24} />
                         </button>
                     </div>
                 </div>
 
-                <div className="flex-1 flex flex-col min-h-0 bg-stone-950">
-                    <div className="flex border-b border-stone-800">
+                <div className="flex-1 flex flex-col min-h-0 bg-gray-50/30">
+                    <div className="flex border-b border-gray-100 bg-white">
                         <button
                             onClick={() => onTogglePromptView()}
-                            className={`px-4 py-2 text-sm font-medium transition-colors ${isFullPromptView ? 'bg-stone-800 text-stone-400' : 'bg-orange-900/30 text-orange-300'}`}
+                            className={`px-4 py-2 text-sm font-medium transition-colors border-b-2 ${!isFullPromptView ? 'border-orange-500 text-orange-600 bg-orange-50' : 'border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50'}`}
                         >
                             模板提示词
                         </button>
                         <button
                             onClick={() => onTogglePromptView()}
-                            className={`px-4 py-2 text-sm font-medium transition-colors ${isFullPromptView ? 'bg-orange-900/30 text-orange-300' : 'bg-stone-800 text-stone-400'}`}
+                            className={`px-4 py-2 text-sm font-medium transition-colors border-b-2 ${isFullPromptView ? 'border-emerald-500 text-emerald-600 bg-emerald-50' : 'border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50'}`}
                         >
                             完整提示词 (AI实际接收)
                         </button>
@@ -419,34 +419,36 @@ export const PromptEditorModal: React.FC<{
 
                     {!isFullPromptView ? (
                         <>
-                            <div className="p-2 bg-orange-900/20 text-orange-300 text-xs text-center border-b border-stone-800">
+                            <div className="p-2 bg-orange-50 text-orange-700 text-xs text-center border-b border-orange-100 flex items-center justify-center">
+                                <AlertCircle size={12} className="mr-1.5" />
                                 在此修改提示词将影响接下来的生成结果。变量（如 {'{topic}'}）会被自动替换，请保留它们。
                             </div>
                             <textarea
                                 value={value}
                                 onChange={(e) => setValue(e.target.value)}
-                                className="flex-1 w-full bg-stone-950 p-6 font-mono text-sm text-stone-300 resize-none outline-none focus:bg-stone-900 transition-colors custom-scrollbar"
+                                className="flex-1 w-full bg-white p-6 font-mono text-sm text-gray-800 resize-none outline-none focus:bg-white transition-colors custom-scrollbar leading-relaxed"
                                 spellCheck={false}
                                 placeholder="在此输入提示词..."
                             />
                         </>
                     ) : (
                         <div className="flex-1 flex flex-col min-h-0">
-                            <div className="p-2 bg-emerald-900/20 text-emerald-300 text-xs text-center border-b border-stone-800">
+                            <div className="p-2 bg-emerald-50 text-emerald-700 text-xs text-center border-b border-emerald-100 flex items-center justify-center">
+                                <Sparkles size={12} className="mr-1.5" />
                                 以下是AI实际接收的完整提示词，所有变量已替换为当前项目的实际值。
                             </div>
-                            <div className="flex-1 w-full bg-stone-950 p-6 font-mono text-sm text-stone-300 overflow-y-auto custom-scrollbar whitespace-pre-wrap">
+                            <div className="flex-1 w-full bg-white p-6 font-mono text-sm text-gray-800 overflow-y-auto custom-scrollbar whitespace-pre-wrap leading-relaxed">
                                 {fullPrompt || "暂无完整提示词..."}
                             </div>
                         </div>
                     )}
                 </div>
 
-                <div className="p-4 border-t border-stone-800 bg-stone-900/50 rounded-b-xl flex justify-between space-x-3">
+                <div className="p-4 border-t border-gray-100 bg-white rounded-b-xl flex justify-between space-x-3">
                     {isFullPromptView && (
                         <button
                             onClick={() => navigator.clipboard.writeText(fullPrompt)}
-                            className="px-4 py-2 bg-stone-800 hover:bg-stone-700 text-white rounded-lg transition-colors text-sm flex items-center"
+                            className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors text-sm flex items-center font-medium"
                             title="复制完整提示词"
                         >
                             <Copy size={16} className="mr-2" /> 复制完整提示词
@@ -458,12 +460,12 @@ export const PromptEditorModal: React.FC<{
                                 onSave(value);
                                 onClose();
                             }}
-                            className="px-6 py-2 bg-orange-600 hover:bg-orange-500 text-white rounded-lg transition-colors font-bold flex items-center text-sm"
+                            className="px-6 py-2 bg-black hover:bg-gray-800 text-white rounded-lg transition-colors font-bold flex items-center text-sm shadow-md"
                         >
                             <Save size={16} className="mr-2" /> 保存修改
                         </button>
                     )}
-                    <button onClick={onClose} className="px-4 py-2 bg-stone-800 hover:bg-stone-700 text-white rounded-lg transition-colors text-sm">
+                    <button onClick={onClose} className="px-4 py-2 bg-white border border-gray-200 hover:bg-gray-50 text-gray-600 rounded-lg transition-colors text-sm font-medium">
                         关闭
                     </button>
                 </div>
@@ -477,29 +479,29 @@ export const CustomRequestModal: React.FC<{ isOpen: boolean; onClose: () => void
     if (!isOpen) return null;
     return (
         <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
-            <div className="bg-stone-900 border border-stone-800 rounded-xl w-full max-w-lg shadow-2xl animate-in fade-in zoom-in-95">
-                <div className="flex justify-between items-center p-4 border-b border-stone-800 bg-stone-900/50 h-16">
-                    <h3 className="text-lg font-bold text-white flex items-center">
-                        <Sparkles className="mr-2 text-amber-400" size={20} /> 自定义生成要求
+            <div className="bg-white border border-gray-100 rounded-xl w-full max-w-lg shadow-2xl animate-in fade-in zoom-in-95 ring-1 ring-black/5">
+                <div className="flex justify-between items-center p-4 border-b border-gray-100 bg-white h-16 rounded-t-xl">
+                    <h3 className="text-lg font-serif font-bold text-gray-900 flex items-center">
+                        <Sparkles className="mr-2 text-black" size={20} /> 自定义生成要求
                     </h3>
-                    <button onClick={onClose} className="text-stone-400 hover:text-white transition-colors">
+                    <button onClick={onClose} className="text-gray-400 hover:text-gray-900 transition-colors">
                         <X size={24} />
                     </button>
                 </div>
                 <div className="p-6">
-                    <p className="text-sm text-stone-400 mb-3">
+                    <p className="text-sm text-gray-500 mb-3">
                         请输入您对“{title}”的具体修改意见或创作要求。AI 将基于您的想法重新生成内容。
                     </p>
                     <textarea
                         value={value}
                         onChange={(e) => setValue(e.target.value)}
-                        className="w-full h-32 bg-stone-950 border border-stone-800 rounded-lg p-3 text-white text-sm focus:ring-2 focus:ring-orange-500 outline-none resize-none"
+                        className="w-full h-32 bg-white border border-gray-200 rounded-lg p-3 text-gray-900 text-sm focus:ring-1 focus:ring-black focus:border-black outline-none resize-none shadow-sm transition-all"
                         placeholder="例如：希望这个情节更反转一点... / 希望主角表现得更冷酷..."
                         autoFocus
                     />
                 </div>
-                <div className="p-4 border-t border-stone-800 flex justify-end space-x-3">
-                    <button onClick={onClose} className="px-4 py-2 bg-stone-800 hover:bg-stone-700 text-white rounded-lg text-sm">取消</button>
+                <div className="p-4 border-t border-gray-100 flex justify-end space-x-3 bg-gray-50/50 rounded-b-xl">
+                    <button onClick={onClose} className="px-4 py-2 bg-white border border-gray-200 hover:bg-gray-50 text-gray-600 rounded-lg text-sm font-medium transition-colors">取消</button>
                     <button
                         onClick={() => {
                             onSubmit(value);
@@ -507,7 +509,7 @@ export const CustomRequestModal: React.FC<{ isOpen: boolean; onClose: () => void
                             onClose();
                         }}
                         disabled={!value.trim()}
-                        className="px-4 py-2 bg-orange-600 hover:bg-orange-500 text-white rounded-lg text-sm font-bold disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="px-4 py-2 bg-black hover:bg-gray-800 text-white rounded-lg text-sm font-bold disabled:opacity-50 disabled:cursor-not-allowed shadow-md transition-colors"
                     >
                         确认重新生成
                     </button>
@@ -527,21 +529,23 @@ export const JudgeResultModal: React.FC<{
 
     return (
         <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
-            <div className="bg-stone-900 border border-red-900/50 rounded-xl w-full max-w-4xl h-[85vh] flex flex-col shadow-2xl animate-in fade-in zoom-in-95 ring-1 ring-red-500/20">
-                <div className="flex justify-between items-center p-4 border-b border-red-900/30 bg-red-950/20 h-16">
-                    <h3 className="text-lg font-bold text-red-400 flex items-center">
-                        <Gavel className="mr-2" size={20} /> 选题生死官 · 判决书
+            <div className="bg-white border border-red-200 rounded-xl w-full max-w-4xl h-[85vh] flex flex-col shadow-2xl animate-in fade-in zoom-in-95 ring-4 ring-red-50 ring-offset-0">
+                <div className="flex justify-between items-center p-4 border-b border-red-100 bg-red-50/50 h-16 rounded-t-xl">
+                    <h3 className="text-lg font-serif font-bold text-red-900 flex items-center">
+                        <Gavel className="mr-2 text-red-700" size={20} /> 选题生死官 · 判决书
                     </h3>
-                    <button onClick={onClose} className="text-stone-400 hover:text-white transition-colors">
+                    <button onClick={onClose} className="text-red-400 hover:text-red-900 transition-colors">
                         <X size={24} />
                     </button>
                 </div>
-                <div className="flex-1 p-6 overflow-y-auto">
-                    <MarkdownViewer content={content} />
+                <div className="flex-1 p-8 overflow-y-auto bg-white">
+                    <div className="prose prose-red max-w-none prose-sm sm:prose-base prose-headings:font-serif prose-headings:text-red-950 prose-p:text-gray-800 prose-strong:text-red-900 leading-relaxed font-serif">
+                        <MarkdownViewer content={content} />
+                    </div>
                 </div>
-                <div className="p-4 border-t border-stone-800 bg-stone-900/50 rounded-b-xl">
+                <div className="p-4 border-t border-red-100 bg-red-50/30 rounded-b-xl">
                     <div className="flex flex-col gap-3">
-                        <div className="text-sm text-stone-400 text-center mb-2">
+                        <div className="text-sm text-red-600/80 text-center mb-2 font-serif">
                             判官已提供优化方案，您可以选择采纳其中一个方案重写DNA，或保持原样
                         </div>
                         <div className="flex gap-3 justify-center flex-wrap">
@@ -549,19 +553,19 @@ export const JudgeResultModal: React.FC<{
                                 <>
                                     <button
                                         onClick={() => { onSelectProposal(1); onClose(); }}
-                                        className="px-4 py-2 bg-orange-900/50 hover:bg-orange-800/50 text-orange-100 border border-orange-800 rounded-lg transition-colors"
+                                        className="px-6 py-2 bg-red-900 hover:bg-red-800 text-white border border-red-900 rounded-lg transition-colors font-bold shadow-sm"
                                     >
                                         采纳方案一
                                     </button>
                                     <button
                                         onClick={() => { onSelectProposal(2); onClose(); }}
-                                        className="px-4 py-2 bg-orange-900/50 hover:bg-orange-800/50 text-orange-100 border border-orange-800 rounded-lg transition-colors"
+                                        className="px-6 py-2 bg-red-900 hover:bg-red-800 text-white border border-red-900 rounded-lg transition-colors font-bold shadow-sm"
                                     >
                                         采纳方案二
                                     </button>
                                     <button
                                         onClick={() => { onSelectProposal(3); onClose(); }}
-                                        className="px-4 py-2 bg-orange-900/50 hover:bg-orange-800/50 text-orange-100 border border-orange-800 rounded-lg transition-colors"
+                                        className="px-6 py-2 bg-red-900 hover:bg-red-800 text-white border border-red-900 rounded-lg transition-colors font-bold shadow-sm"
                                     >
                                         采纳方案三
                                     </button>
@@ -569,7 +573,7 @@ export const JudgeResultModal: React.FC<{
                             )}
                             <button
                                 onClick={onClose}
-                                className="px-4 py-2 bg-stone-800 hover:bg-stone-700 text-stone-100 border border-stone-700 rounded-lg transition-colors"
+                                className="px-6 py-2 bg-white hover:bg-gray-50 text-gray-600 border border-gray-200 rounded-lg transition-colors font-medium"
                             >
                                 保持原样
                             </button>
@@ -698,24 +702,24 @@ export const ConfigModal: React.FC<{ isOpen: boolean; onClose: () => void; confi
 
     return (
         <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
-            <div className="bg-stone-900 border border-stone-800 rounded-xl w-full max-w-lg shadow-2xl animate-in fade-in zoom-in-95">
-                <div className="flex justify-between items-center p-4 border-b border-stone-800 bg-stone-900/50 h-16">
-                    <h3 className="text-lg font-bold text-white flex items-center">
-                        <Settings className="mr-2 text-amber-400" size={20} /> 配置接口
+            <div className="bg-white border border-gray-100 rounded-xl w-full max-w-lg shadow-2xl animate-in fade-in zoom-in-95 ring-1 ring-black/5">
+                <div className="flex justify-between items-center p-4 border-b border-gray-100 bg-white h-16 rounded-t-xl">
+                    <h3 className="text-lg font-serif font-bold text-gray-900 flex items-center">
+                        <Settings className="mr-2 text-black" size={20} /> 配置接口
                     </h3>
-                    <button onClick={onClose} className="text-stone-400 hover:text-white transition-colors">
+                    <button onClick={onClose} className="text-gray-400 hover:text-gray-900 transition-colors">
                         <X size={24} />
                     </button>
                 </div>
                 <div className="p-6 space-y-4">
                     {/* 模型提供商选择 */}
                     <div>
-                        <label className="block text-xs text-stone-400 mb-1">🏢 模型提供商</label>
+                        <label className="block text-xs font-bold text-gray-400 mb-1 uppercase tracking-wider">🏢 模型提供商</label>
                         <select
                             name="provider"
                             value={localConfig.provider}
                             onChange={handleProviderChange}
-                            className="w-full bg-stone-950 border border-stone-800 rounded p-2 text-sm text-white"
+                            className="w-full bg-gray-50 border border-gray-200 rounded p-2 text-sm text-gray-900 focus:border-black focus:ring-1 focus:ring-black/5 outline-none transition-all"
                         >
                             <option value="google">Google Gemini</option>
                             <option value="openai">OpenAI</option>
@@ -727,28 +731,28 @@ export const ConfigModal: React.FC<{ isOpen: boolean; onClose: () => void; confi
 
                     {/* 基本网址 */}
                     <div>
-                        <label className="block text-xs text-stone-400 mb-1">🔗 地址 (基本网址)</label>
+                        <label className="block text-xs font-bold text-gray-400 mb-1 uppercase tracking-wider">🔗 地址 (基本网址)</label>
                         <input
                             name="baseUrl"
                             value={localConfig.baseUrl}
                             onChange={handleChange}
                             placeholder={MODEL_PRESETS[localConfig.provider].baseUrl}
-                            className="w-full bg-stone-950 border border-stone-800 rounded p-2 text-sm text-white"
+                            className="w-full bg-gray-50 border border-gray-200 rounded p-2 text-sm text-gray-900 focus:border-black focus:ring-1 focus:ring-black/5 outline-none transition-all placeholder:text-gray-400"
                         />
                     </div>
 
                     {/* API密钥 */}
                     <div>
-                        <label className="block text-xs text-stone-400 mb-1">🔑 API密钥</label>
+                        <label className="block text-xs font-bold text-gray-400 mb-1 uppercase tracking-wider">🔑 API密钥</label>
                         <input
                             name="apiKey"
                             type="password"
                             value={localConfig.apiKey}
                             onChange={handleChange}
                             placeholder="sk-..."
-                            className="w-full bg-stone-950 border border-stone-800 rounded p-2 text-sm text-white"
+                            className="w-full bg-gray-50 border border-gray-200 rounded p-2 text-sm text-gray-900 focus:border-black focus:ring-1 focus:ring-black/5 outline-none transition-all placeholder:text-gray-400"
                         />
-                        <p className="text-xs text-stone-500 mt-1">
+                        <p className="text-xs text-gray-500 mt-1">
                             {localConfig.provider === 'google' && '获取API密钥: https://aistudio.google.com/app/apikey'}
                             {localConfig.provider === 'openai' && '获取API密钥: https://platform.openai.com/api-keys'}
                             {localConfig.provider === 'claude' && '获取API密钥: https://console.anthropic.com/settings/keys'}
@@ -759,12 +763,12 @@ export const ConfigModal: React.FC<{ isOpen: boolean; onClose: () => void; confi
 
                     {/* 文本模型选择 */}
                     <div>
-                        <label className="block text-xs text-stone-400 mb-1">🤖 文本模型名称 (Text Model)</label>
+                        <label className="block text-xs font-bold text-gray-400 mb-1 uppercase tracking-wider">🤖 文本模型名称 (Text Model)</label>
                         <select
                             name="textModel"
                             value={localConfig.textModel}
                             onChange={handleChange}
-                            className="w-full bg-stone-950 border border-stone-800 rounded p-2 text-sm text-white"
+                            className="w-full bg-gray-50 border border-gray-200 rounded p-2 text-sm text-gray-900 focus:border-black focus:ring-1 focus:ring-black/5 outline-none transition-all"
                         >
                             {MODEL_PRESETS[localConfig.provider].models.map(model => (
                                 <option key={model.value} value={model.value}>
@@ -778,55 +782,48 @@ export const ConfigModal: React.FC<{ isOpen: boolean; onClose: () => void; confi
                                 value={localConfig.customTextModel || ''}
                                 onChange={handleChange}
                                 placeholder="输入自定义模型名称，例如：gpt-4o, claude-3-opus等"
-                                className="w-full bg-stone-950 border border-stone-800 rounded p-2 text-sm text-white mt-2"
+                                className="w-full bg-gray-50 border border-gray-200 rounded p-2 text-sm text-gray-900 mt-2 focus:border-black focus:ring-1 focus:ring-black/5 outline-none transition-all"
                             />
                         )}
                     </div>
                 </div>
-                <div className="p-4 border-t border-stone-800">
+                <div className="p-4 border-t border-gray-100 bg-white rounded-b-xl">
                     {/* 测试结果反馈 */}
                     {testResult && (
-                        <div className={`flex items-center mb-4 p-3 rounded-lg ${testResult === 'success' ? 'bg-emerald-900/30 border border-emerald-800/50' : 'bg-red-900/30 border border-red-800/50'}`}>
+                        <div className={`flex items-center mb-4 p-3 rounded-lg ${testResult === 'success' ? 'bg-emerald-50 border border-emerald-100' : 'bg-red-50 border border-red-100'}`}>
                             {testResult === 'success' ? (
-                                <CheckCircle2 size={18} className="text-emerald-400 mr-2" />
+                                <CheckCircle2 size={18} className="text-emerald-500 mr-2" />
                             ) : (
-                                <AlertCircle size={18} className="text-red-400 mr-2" />
+                                <AlertCircle size={18} className="text-red-500 mr-2" />
                             )}
-                            <span className={`text-sm ${testResult === 'success' ? 'text-emerald-300' : 'text-red-300'}`}>
+                            <span className={`text-sm ${testResult === 'success' ? 'text-emerald-700' : 'text-red-700'}`}>
                                 {testMessage}
                             </span>
                         </div>
                     )}
 
-                    {/* 按钮区域 */}
-                    <div className="flex justify-between space-x-3">
+                    <div className="flex justify-between items-center">
                         <button
                             onClick={handleTestConnection}
-                            disabled={isTesting || !localConfig.apiKey || !localConfig.baseUrl}
-                            className={`px-4 py-2 text-sm font-bold rounded-lg transition-colors flex items-center ${isTesting ? 'bg-amber-600 hover:bg-amber-500 cursor-not-allowed opacity-70' : 'bg-orange-600 hover:bg-orange-500 cursor-pointer'}`}
+                            disabled={isTesting || !localConfig.apiKey}
+                            className="text-gray-500 hover:text-black text-sm flex items-center transition-colors disabled:opacity-50"
                         >
-                            {isTesting ? (
-                                <>
-                                    <RefreshCw size={16} className="mr-2 animate-spin" />
-                                    测试中...
-                                </>
-                            ) : (
-                                <>
-                                    <Sparkles size={16} className="mr-2" />
-                                    测试连接
-                                </>
-                            )}
+                            {isTesting ? <RefreshCw className="animate-spin mr-2" size={16} /> : <div className="w-4 h-4 mr-2 rounded-full border border-gray-400"></div>}
+                            测试连接
                         </button>
 
-                        <button
-                            onClick={() => {
-                                onSave(localConfig);
-                                onClose();
-                            }}
-                            className="px-4 py-2 bg-orange-600 hover:bg-orange-500 text-white rounded-lg text-sm font-bold transition-colors"
-                        >
-                            保存
-                        </button>
+                        <div className="flex space-x-3">
+                            <button onClick={onClose} className="px-4 py-2 bg-white border border-gray-200 hover:bg-gray-50 text-gray-600 rounded-lg text-sm font-medium transition-colors">取消</button>
+                            <button
+                                onClick={() => {
+                                    onSave(localConfig);
+                                    onClose();
+                                }}
+                                className="px-6 py-2 bg-black hover:bg-gray-800 text-white rounded-lg text-sm font-bold shadow-md transition-colors"
+                            >
+                                保存配置
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
