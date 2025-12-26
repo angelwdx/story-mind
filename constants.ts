@@ -625,14 +625,14 @@ Prompt: 网文选题·生死判官 (V4.0 独家公式版)
 1. **任务分解**：将情节架构的节拍细化到每一章。
 2. **钩子均衡**：确保没有“水章”。平淡的过渡必须通过“信息差”或“人设高光”来补偿。
 3. **三位一体**：每章必须同时满足：推进主线、展示人设、埋设伏笔。
-629: 
-630: ## 📥 输入参数
-631: - 核心DNA：{STORY_DNA}
-632: - 角色动力学: {character_dynamics}
-633: - 世界观: {world_building}
-634: - 情节架构: {plot_architecture}
-635: - 章节规模：共 {number_of_chapters} 章
-636: - 修改要求：{custom_instruction}
+
+## 📥 输入参数
+- 核心DNA：{STORY_DNA}
+- 角色动力学: {character_dynamics}
+- 世界观: {world_building}
+- 情节架构: {plot_architecture}
+- 章节规模：共 {number_of_chapters} 章
+- 修改要求：{custom_instruction}
 
 ## 🏗️ 生成结果
 ## 章节蓝图 (CHAPTER_BLUEPRINT)
