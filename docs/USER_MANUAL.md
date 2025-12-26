@@ -1,7 +1,7 @@
 # Story Mind 使用指南与架构设计大师课
 
 > [!NOTE]
-> 本文档旨在帮助 **零基础学习者** 不仅学会使用 Story Mind，更能理解一个复杂的 AI 应用是如何从逻辑层、数据层到表现层进行架构设计的。
+> 本文档旨在帮助 **零基础学习者** 不不仅学会使用 Story Mind，更能理解一个复杂的 AI 应用是如何从逻辑层、数据层到表现层进行架构设计的。
 
 ---
 
@@ -32,6 +32,7 @@
 
 ```mermaid
 graph TD
+    %% 构图教学 1: classDef 定义外观，提升专业度
     classDef storage fill:#e1f5fe,stroke:#01579b,stroke-width:2px;
     classDef process fill:#fff3e0,stroke:#ff6f00,stroke-width:2px;
     classDef ai fill:#f3e5f5,stroke:#4a148c,stroke-width:2px;
@@ -54,6 +55,7 @@ graph TD
         Formatter[提示词格式化]:::process
     end
 
+    %% 数据流动方向
     UI --> Compiler
     DNA --> Compiler
     Compiler --> Formatter
@@ -62,20 +64,98 @@ graph TD
     LLM --> Plot
     LLM --> Blue
     
+    %% 闭环同步
     LLM -- 提取信息 --> Sum
     Sum -- 注入上下文 --> Compiler
 ```
+
+**【如何看懂这张图？】**
+*   **方块 []**：代表一个功能节点。
+*   **实线箭头 -->**：代表数据的传递。
+*   **虚线线箭头 -.->**：代表逻辑上的演进或依赖。
+*   **颜色标注**：蓝色通常代表“静态存储”，紫色代表“外部服务 (AI)”，橙色代表“中间处理逻辑”。
 
 ---
 
 ## 🛠️ 第三部分：AI 上下文工程 (Context Engineering)
 
+这是 Story Mind 最核心的技术点：**变量替换逻辑**。
+
 ### 1. 什么是变量替换？
 在代码 `constants.ts` 中，你会看到很多 `{character_dynamics}` 这样的占位符。这就像填空题：系统根据您的设定，实时把这些括号里的东西替换成具体的故事内容。
+
+### 2. 「黄金六标签」全链路流转图 (Variable Life Cycle)
+为了解决 AI 在长篇创作中“记忆模糊”的问题，我们确立了一套 **「黄金六标签」** 标准。以下是这套数据流如何在创作全链路中实现 1:1 精准流转的展示：
+
+```mermaid
+graph TD
+    subgraph "阶段 A: 章节蓝图生成 (AI 原始产出)"
+        BP_TEXT["蓝图 Markdown 文本"]
+        L1["**章节定位：** ..."]
+        L2["**核心作用：** ..."]
+        L3["**悬念设置：** ..."]
+        L4["**伏笔埋藏：** ..."]
+        L5["**反转指数：** ..."]
+        L6["**本章摘要：** ..."]
+        BP_TEXT --> L1 & L2 & L3 & L4 & L5 & L6
+    end
+
+    subgraph "阶段 B: App.tsx / Regex 解析引擎"
+        RE_ENGINE["getPromptVariables (正则提取)"]
+        PARSE1["chapter_role (章节定位)"]
+        PARSE2["chapter_purpose (核心作用)"]
+        PARSE3["suspense_level (悬念设置)"]
+        PARSE4["foreshadowing (伏笔埋藏)"]
+        PARSE5["plot_twist_level (反转指数)"]
+        PARSE6["short_summary (本章摘要)"]
+        L1 & L2 & L3 & L4 & L5 & L6 --> RE_ENGINE
+        RE_ENGINE --> PARSE1 & PARSE2 & PARSE3 & PARSE4 & PARSE5 & PARSE6
+    end
+
+    subgraph "阶段 C: 写作提示词变量注入"
+        WP_TEMPLATE["CHAPTER_1 / CHAPTER_NEXT 模板"]
+        VAR_DNA["{STORY_DNA}"]
+        VAR_ROLE["{chapter_role}"]
+        VAR_PURPOSE["{chapter_purpose}"]
+        VAR_SUSPENSE["{suspense_level}"]
+        VAR_FORE["{foreshadowing}"]
+        VAR_TWIST["{plot_twist_level}"]
+        VAR_SUMMARY["{short_summary}"]
+        
+        DNA_SOURCE["generatedData.dna"] --> VAR_DNA
+        PARSE1 --> VAR_ROLE
+        PARSE2 --> VAR_PURPOSE
+        PARSE3 --> VAR_SUSPENSE
+        PARSE4 --> VAR_FORE
+        PARSE5 --> VAR_TWIST
+        PARSE6 --> VAR_SUMMARY
+        
+        VAR_DNA & VAR_ROLE & VAR_PURPOSE & VAR_SUSPENSE & VAR_FORE & VAR_TWIST & VAR_SUMMARY --> WP_TEMPLATE
+    end
+
+    subgraph "阶段 D: 正文创作 (最终 AI 产出)"
+        FINAL_CHAPTER["AI 生成小说正文"]
+        WP_TEMPLATE --> FINAL_CHAPTER
+    end
+
+    style BP_TEXT fill:#fcf,stroke:#333,stroke-width:2px
+    style RE_ENGINE fill:#bbf,stroke:#333,stroke-width:2px
+    style WP_TEMPLATE fill:#bfb,stroke:#333,stroke-width:2px
+    style FINAL_CHAPTER fill:#fbb,stroke:#333,stroke-width:2px
+```
+
+### 3. 上下文同步 (Context Sync) ── 解决 AI “失忆”
+**架构难点**：写到第 100 章时，AI 忘了第 1 章设定的伏笔怎么办？
+**解决方案**：
+*   **状态回环 (State Feedback)**：每写完一章，系统会让 AI 对该章进行“压缩总结”。
+*   **全局摘要更新**：将这个总结归档到 `Global Summary` 中。
+*   **动态注入**：写下一章时，强制把这个 `Global Summary` 塞进 Prompt。
 
 ---
 
 ## 🎨 第四部分：Mermaid 绘图速成 (Mermaid Masterclass)
+
+如果你想画出像 Story Mind 这样专业的图，记住以下三个最常用模版：
 
 ### 1. 流程图 (Flowchart) —— 表达“先后顺序”
 ```mermaid
@@ -100,7 +180,7 @@ sequenceDiagram
 在 **Antigravity** 环境中工作，架构设计不再是纸上谈兵。作为一个深度的 AI 开发环境，这里的一切工具（包括我，Antigravity AI）都是为了辅助您实现从“点子”到“代码”的快速转化。
 
 *   **第一步**：理清输入和输出。
-*   **第二步**：定义中间的数据中转站。
-*   **第三步**：利用 Antigravity 的原生能力进行逻辑验证。
+*   **第二步**：定义中间的数据中转站 (Repository)。
+*   **第三步**：用双箭线表达交互逻辑。
 
 恭喜你！读到这里，你已经踏上了成为 AI 产品架构师的旅程。
