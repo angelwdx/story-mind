@@ -753,6 +753,9 @@ Prompt: 网文选题·生死判官 (V4.0 独家公式版)
 【选定题材公式】
 {selected_theme_info}
 
+【核心DNA (STORY_DNA)】
+{STORY_DNA}
+
 ## 输出格式要求
 **非常重要：请只输出章节标题和正文内容。**
 格式如下：
@@ -761,18 +764,18 @@ Prompt: 网文选题·生死判官 (V4.0 独家公式版)
 
 请基于以下完整框架创作第一章：
 - 章节信息：第{novel_number} 章《{chapter_title}》
-- 本章定位：{chapter_role}
+- 章节定位：{chapter_role}
 - 核心作用：{chapter_purpose}
-- 悬念密度：{suspense_level}
-- 伏笔操作：{foreshadowing}
-- 认知颠覆：{plot_twist_level}
-- 本章简述：{short_summary}
+- 悬念设置：{suspense_level}
+- 伏笔埋藏：{foreshadowing}
+- 反转指数：{plot_twist_level}
+- 本章属性：{short_summary}
 - 角色状态：{character_state}
 - 世界观设定：{world_building}
 - 情节架构：{plot_architecture}
 - 叙事视角：{perspective}
 - 每章字数：{word_count}
-- 自定义特殊要求：{custom_requirements}
+- 自定义要求：{custom_requirements}
 `,
 
   CHAPTER_NEXT: `
@@ -780,21 +783,17 @@ Prompt: 网文选题·生死判官 (V4.0 独家公式版)
 你是一位专业的连载小说作家，擅长在保持故事连贯性的同时，不断推进情节发展和角色成长。你的任务是基于前文基础，创作出逻辑自洽、情感递进的后续章节。
 
 ## 核心指令：逻辑连贯与题材应用
-1. **逻辑连贯（最高优先级）**：仔细阅读【前章结尾】和【前文基础】，确保新章节的开篇与前文无缝衔接，人物状态、位置、道具等细节必须保持一致，严禁出现逻辑断层。
-2. **题材应用**：如果提供了【选定题材公式】，请以此为核心构建本章的独特看点。
-3. **叙事视角**：严格按照【{perspective}】视角撰写内容，保持一致。
-4. **严格字数控制**：请严格按照 ** {word_count}汉字 ** 创作完整的章节内容，正负误差不超过10%。
-- 确保内容完整，有开头、发展和结尾，不要在句子或段落中间截断
-- 不要添加任何多余的内容
-- 字数统计包括所有正文内容，不包括章节标题
-5. **正文写作**：基于完整的创作框架，撰写本章。70% 句子长度 < 18 词；偶尔插入 < 6 词的独立短句。
+1. **逻辑连贯（最高优先级）**：仔细阅读【前文回顾】和【前文基础】，确保新章节的开篇与前文无缝衔接。
+2. **题材应用**：如果提供了【选定题材公式】，请以此为核心构建看点。
+3. **叙事视角**：严格按照【{perspective}】视角撰写内容。
+4. **严格字数控制**：请严格按照 ** {word_count}汉字 ** 创作，正负误差不超过10%。
+5. **正文写作**：基于完整的创作框架，撰写本章。
 
 【选定题材公式】
 {selected_theme_info}
 
-【前文逻辑检查点】
-- 上一章结束时主角在哪里？做什么？心情如何？
-- 本章开始时必须承接上述状态。
+【核心DNA (STORY_DNA)】
+{STORY_DNA}
 
 ## 输出格式要求
 **非常重要：请只输出章节标题和正文内容。**
@@ -802,27 +801,24 @@ Prompt: 网文选题·生死判官 (V4.0 独家公式版)
 ## 第{novel_number} 章 《{chapter_title}》
 [正文内容...]
 
-请基于以下信息创作本章内容：
-** 前文基础 **：
-- 全局摘要：{global_summary}
-- 前章结尾：{previous_chapter_excerpt}
-- 角色状态：{character_state}
-- 前章摘要：{previous_chapter_summary}
-** 当前章节规划 **：
-- 第{novel_number} 章《{chapter_title}》
-- 本章定位：{chapter_role}
+请基于以下完整背景创作后续章节：
+- 章节信息：第{novel_number} 章《{chapter_title}》
+- 章节定位：{chapter_role}
 - 核心作用：{chapter_purpose}
-- 悬念密度：{suspense_level}
-- 伏笔操作：{foreshadowing}
-- 认知颠覆：{plot_twist_level}
-- 本章简述：{short_summary}
+- 悬念设置：{suspense_level}
+- 伏笔埋藏：{foreshadowing}
+- 反转指数：{plot_twist_level}
+- 本章属性：{short_summary}
+- 角色状态：{character_state}
+- 世界观设定：{world_building}
+- 情节架构：{plot_architecture}
+- 全局摘要：{global_summary}
+- 前文摘要：{chapter_summary}
+- 前文回顾：{previous_chapter_excerpt}
+- 下章预告：第{next_chapter_number}章({next_chapter_purpose})
 - 叙事视角：{perspective}
 - 每章字数：{word_count}
-** 下章预告 **：
-- 第{next_chapter_number} 章《{next_chapter_title}》
-- 下章作用：{next_chapter_purpose}
-** 辅助资源 **：
-- 自定义特殊要求：{custom_requirements}
+- 自定义要求：{custom_requirements}
 `
 };
 
