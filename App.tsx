@@ -1209,12 +1209,12 @@ export default function App() {
                         const fieldMatch = line.match(/^\s*[-*]?\s*\*\*(.*?)[：:]\*\*\s*(.*)/);
                         if (fieldMatch) {
                             const [_, label, value] = fieldMatch;
-                            if (label.includes('章节定位')) chapterRole = value.trim();
+                            if (label.includes('章节定位') || label.includes('本章定位')) chapterRole = value.trim();
                             if (label.includes('核心作用')) chapterPurpose = value.trim();
-                            if (label.includes('悬念设置')) suspenseLevel = value.trim();
-                            if (label.includes('伏笔埋藏') || label.includes('埋线取线')) foreshadowing = value.trim();
-                            if (label.includes('反转指数') || label.includes('认知颠覆')) plotTwistLevel = value.trim();
-                            if (label.includes('本章摘要') || label.includes('本章简述')) shortSummary = value.trim();
+                            if (label.includes('悬念设置') || label.includes('悬念密度')) suspenseLevel = value.trim();
+                            if (label.includes('伏笔埋藏') || label.includes('伏笔操作') || label.includes('埋线取线')) foreshadowing = value.trim();
+                            if (label.includes('反转指数') || label.includes('认知颠覆') || label.includes('反转程度')) plotTwistLevel = value.trim();
+                            if (label.includes('本章摘要') || label.includes('本章简述') || label.includes('剧情摘要')) shortSummary = value.trim();
                         }
                     } else if (inNextChapter) {
                         const fieldMatch = line.match(/^\s*[-*]?\s*\*\*(.*?)[：:]\*\*\s*(.*)/);
