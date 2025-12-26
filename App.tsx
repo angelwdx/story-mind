@@ -1209,8 +1209,8 @@ export default function App() {
                         const fieldMatch = line.match(/^\s*[-*]?\s*\*\*(.*?)[：:]\*\*\s*(.*)/);
                         if (fieldMatch) {
                             const [_, label, value] = fieldMatch;
-                            if (label.includes('核心作用')) chapterRole = value.trim();
-                            if (label.includes('剧情安排')) chapterPurpose = value.trim();
+                            if (label.includes('章节定位')) chapterRole = value.trim();
+                            if (label.includes('核心作用')) chapterPurpose = value.trim();
                             if (label.includes('悬念设置')) suspenseLevel = value.trim();
                             if (label.includes('伏笔埋藏') || label.includes('埋线取线')) foreshadowing = value.trim();
                             if (label.includes('反转指数') || label.includes('认知颠覆')) plotTwistLevel = value.trim();

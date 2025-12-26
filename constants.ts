@@ -638,8 +638,8 @@ Prompt: 网文选题·生死判官 (V4.0 独家公式版)
 ## 章节蓝图 (CHAPTER_BLUEPRINT)
 
 ### 第{n}章 - [极具张力的标题]
-- **核心作用：** (本章必须解决什么问题？)
-- **剧情安排：** (具体的推进逻辑)
+- **章节定位：** (本章在全书中的位置和主要任务)
+- **核心作用：** (本章具体的剧情推进和冲突点)
 - **悬念设置：** [{level}]
 - **伏笔埋藏：** 埋设([具体内容]) -> 回收([具体内容])
 - **反转指数：** [{intensity}]
@@ -769,7 +769,7 @@ Prompt: 网文选题·生死判官 (V4.0 独家公式版)
 - 悬念设置：{suspense_level}
 - 伏笔埋藏：{foreshadowing}
 - 反转指数：{plot_twist_level}
-- 本章属性：{short_summary}
+- 本章摘要：{short_summary}
 - 角色状态：{character_state}
 - 世界观设定：{world_building}
 - 情节架构：{plot_architecture}
