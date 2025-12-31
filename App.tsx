@@ -2571,11 +2571,6 @@ export default function App() {
               </button>
             </div>
           </div>
-          <div className="text-[10px] text-gray-400 text-center font-serif leading-relaxed">
-            基于猫叔的AI小说创作系统制作
-            <br />
-            公众号：AI替代人类
-          </div>
         </div>
       </div>
 
