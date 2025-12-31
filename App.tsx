@@ -1873,113 +1873,125 @@ export default function App() {
 
     if (currentStepId === 'dna') {
       return (
-        <div className="flex flex-col space-y-6">
-          {/* Action Bar */}
-          <div className="flex flex-wrap justify-between items-center gap-3 bg-white px-4 py-3 rounded-xl border border-gray-100 shadow-sm">
-            <h2 className="text-lg font-serif font-bold text-gray-900 flex items-center">
-              {React.createElement(STEPS[currentStep].icon, {
-                className: 'mr-2 text-gray-400',
-                size: 18,
-              })}
-              {STEPS[currentStep].title}
-            </h2>
-            <div className="flex space-x-2 sm:space-x-3 flex-wrap justify-end w-auto">
-              {currentStepId === 'dna' && (
-                <button
-                  onClick={handleJudge}
-                  disabled={isJudging}
-                  className={`px-3 py-1.5 bg-white border border-gray-200 text-stone-700 hover:bg-gray-50 hover:border-gray-300 rounded-lg flex items-center transition-all ${
-                    isJudging ? 'opacity-50 cursor-not-allowed' : 'shadow-sm'
-                  } min-h-[36px] justify-center font-serif text-sm font-medium`}
-                >
-                  {isJudging ? (
-                    <RefreshCw size={14} className="mr-2 animate-spin" />
-                  ) : (
-                    <Gavel size={14} className="mr-2" />
-                  )}
-                  {isJudging ? '审判中...' : '判官审题'}
-                </button>
-              )}
-
-              {content && !isEditing && (
-                <>
+        <div className="flex flex-col h-full">
+          {/* 工具栏 - 编辑模式下隐藏 */}
+          {!isEditing && (
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 bg-white px-4 py-3 rounded-xl border border-gray-100 shadow-sm shrink-0 mb-6">
+              <h2 className="text-lg font-serif font-bold text-gray-900 flex items-center">
+                {React.createElement(STEPS[currentStep].icon, {
+                  className: 'mr-2 text-gray-400',
+                  size: 18,
+                })}
+                {STEPS[currentStep].title}
+              </h2>
+              <div className="flex flex-wrap gap-2 justify-start sm:justify-end w-full sm:w-auto">
+                {currentStepId === 'dna' && (
                   <button
-                    onClick={handleStartEdit}
-                    className="flex items-center px-3 py-1.5 bg-white hover:bg-gray-50 text-stone-700 rounded-lg transition-colors border border-gray-200 min-h-[36px] justify-center shadow-sm font-serif text-sm font-medium"
+                    onClick={handleJudge}
+                    disabled={isJudging}
+                    className={`px-2 sm:px-3 py-1.5 bg-white border border-gray-200 text-stone-700 hover:bg-gray-50 hover:border-gray-300 rounded-lg flex items-center transition-all ${
+                      isJudging ? 'opacity-50 cursor-not-allowed' : 'shadow-sm'
+                    } min-h-[36px] justify-center font-serif text-sm font-medium`}
+                    title={isJudging ? '审判中...' : '判官审题'}
                   >
-                    <PenTool size={14} className="mr-2" /> 编辑
+                    {isJudging ? (
+                      <RefreshCw size={14} className="sm:mr-2 animate-spin" />
+                    ) : (
+                      <Gavel size={14} className="sm:mr-2" />
+                    )}
+                    <span className="hidden sm:inline">{isJudging ? '审判中...' : '判官审题'}</span>
                   </button>
-                  <button
-                    onClick={() =>
-                      openCustomModal(STEPS[currentStep].title, (val) =>
-                        handleGenerateStep(currentStepId, val)
-                      )
-                    }
-                    className="flex items-center px-3 py-1.5 bg-white hover:bg-gray-50 text-stone-700 rounded-lg transition-colors border border-gray-200 min-h-[36px] justify-center shadow-sm font-serif text-sm font-medium"
-                  >
-                    <MessageSquare size={14} className="mr-2" /> 提意见
-                  </button>
-                </>
-              )}
-              <button
-                onClick={() => handleGenerateStep(currentStepId)}
-                disabled={isGenerating}
-                className={`flex items-center px-4 py-1.5 bg-white hover:bg-gray-50 text-stone-900 border border-gray-200 hover:border-gray-400 font-serif font-medium rounded-lg transition-all ${
-                  isGenerating ? 'opacity-50 cursor-not-allowed' : 'shadow-sm hover:shadow'
-                } min-h-[36px] justify-center text-sm`}
-              >
-                {isGenerating ? (
-                  <RefreshCw className="animate-spin mr-2" size={14} />
-                ) : (
-                  <Sparkles className="mr-2" size={14} />
                 )}
-                {content ? '重新生成' : '立即生成'}
-              </button>
-            </div>
-          </div>
 
-          {/* Content Area */}
-          <div className="bg-white border border-gray-100 rounded-xl p-6 sm:p-10 shadow-sm min-h-[600px] relative">
-            {isGenerating ? (
-              <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/90 z-10">
-                <RefreshCw className="animate-spin w-10 h-10 text-gray-900 mb-6" />
-                <p className="text-gray-500 font-serif italic text-lg animate-pulse text-center px-4">
-                  {loadingMessage || 'AI 正在深度思考构建中...'}
-                </p>
+                {content && !isEditing && (
+                  <>
+                    <button
+                      onClick={handleStartEdit}
+                      className="flex items-center px-2 sm:px-3 py-1.5 bg-white hover:bg-gray-50 text-stone-700 rounded-lg transition-colors border border-gray-200 min-h-[36px] justify-center shadow-sm font-serif text-sm font-medium"
+                      title="编辑"
+                    >
+                      <PenTool size={14} className="sm:mr-2" />
+                      <span className="hidden sm:inline">编辑</span>
+                    </button>
+                    <button
+                      onClick={() =>
+                        openCustomModal(STEPS[currentStep].title, (val) =>
+                          handleGenerateStep(currentStepId, val)
+                        )
+                      }
+                      className="flex items-center px-2 sm:px-3 py-1.5 bg-white hover:bg-gray-50 text-stone-700 rounded-lg transition-colors border border-gray-200 min-h-[36px] justify-center shadow-sm font-serif text-sm font-medium"
+                      title="提意见"
+                    >
+                      <MessageSquare size={14} className="sm:mr-2" />
+                      <span className="hidden sm:inline">提意见</span>
+                    </button>
+                  </>
+                )}
+                <button
+                  onClick={() => handleGenerateStep(currentStepId)}
+                  disabled={isGenerating}
+                  className={`flex items-center px-2 sm:px-4 py-1.5 bg-white hover:bg-gray-50 text-stone-900 border border-gray-200 hover:border-gray-400 font-serif font-medium rounded-lg transition-all ${
+                    isGenerating ? 'opacity-50 cursor-not-allowed' : 'shadow-sm hover:shadow'
+                  } min-h-[36px] justify-center text-sm`}
+                  title={content ? '重新生成' : '立即生成'}
+                >
+                  {isGenerating ? (
+                    <RefreshCw className="animate-spin sm:mr-2" size={14} />
+                  ) : (
+                    <Sparkles className="sm:mr-2" size={14} />
+                  )}
+                  <span className="hidden sm:inline">{content ? '重新生成' : '立即生成'}</span>
+                </button>
               </div>
-            ) : isEditing ? (
+            </div>
+          )}
+
+          {/* Content Area - 编辑模式填满空间 */}
+          {isEditing ? (
+            <div className="flex-1 min-h-0">
               <MarkdownEditor
                 initialContent={content as string}
                 onSave={handleSaveContent}
                 onCancel={handleCancelEdit}
               />
-            ) : content ? (
-              <div className="max-w-4xl mx-auto space-y-6">
-                <div>
-                  <div className="flex justify-end mb-4 group opacity-0 hover:opacity-100 transition-opacity">
-                    <button
-                      onClick={() => copyToClipboard(content as string)}
-                      className="text-gray-400 hover:text-gray-900 transition-colors p-2 rounded-lg hover:bg-gray-100"
-                      title="复制核心DNA"
-                    >
-                      <Copy size={16} />
-                    </button>
-                  </div>
-                  <div className="prose prose-stone prose-lg max-w-none font-serif text-gray-800 leading-relaxed">
-                    <MarkdownViewer content={content as string} />
+            </div>
+          ) : (
+            <div className="flex-1 min-h-0 bg-white border border-gray-100 rounded-xl p-4 sm:p-10 shadow-sm overflow-y-auto custom-scrollbar relative">
+              {isGenerating ? (
+                <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/90 z-10">
+                  <RefreshCw className="animate-spin w-10 h-10 text-gray-900 mb-6" />
+                  <p className="text-gray-500 font-serif italic text-lg animate-pulse text-center px-4">
+                    {loadingMessage || 'AI 正在深度思考构建中...'}
+                  </p>
+                </div>
+              ) : content ? (
+                <div className="max-w-4xl mx-auto space-y-6">
+                  <div>
+                    <div className="flex justify-end mb-4 group opacity-0 hover:opacity-100 transition-opacity">
+                      <button
+                        onClick={() => copyToClipboard(content as string)}
+                        className="text-gray-400 hover:text-gray-900 transition-colors p-2 rounded-lg hover:bg-gray-100"
+                        title="复制核心DNA"
+                      >
+                        <Copy size={16} />
+                      </button>
+                    </div>
+                    <div className="prose prose-stone prose-lg max-w-none font-serif text-gray-800 leading-relaxed">
+                      <MarkdownViewer content={content as string} />
+                    </div>
                   </div>
                 </div>
-              </div>
-            ) : (
-              <div className="h-full flex flex-col items-center justify-center text-gray-300 py-20">
-                <BookOpen size={64} className="mb-6 opacity-30" />
-                <p className="font-serif text-xl">点击上方“生成”按钮开始构建</p>
-              </div>
-            )}
-          </div>
+              ) : (
+                <div className="h-full flex flex-col items-center justify-center text-gray-300 py-20">
+                  <BookOpen size={64} className="mb-6 opacity-30" />
+                  <p className="font-serif text-xl">点击上方"生成"按钮开始构建</p>
+                </div>
+              )}
+            </div>
+          )}
 
-          {/* Next Step Button */}
-          {currentStep < STEPS.length - 1 && content && (
+          {/* Next Step Button - 编辑模式下隐藏 */}
+          {currentStep < STEPS.length - 1 && content && !isEditing && (
             <div className="flex justify-center p-8">
               <button
                 onClick={() => setCurrentStep(currentStep + 1)}
@@ -2058,15 +2070,15 @@ export default function App() {
           <div className="flex-1 bg-white border border-gray-100 rounded-xl shadow-sm overflow-hidden flex flex-col">
             {currentArchive ? (
               <div className="h-full grid grid-cols-1 lg:grid-cols-3 gap-0 divide-y lg:divide-y-0 lg:divide-x divide-gray-100">
-                {/* 左侧信息区 */}
-                <div className="col-span-1 lg:col-span-1 p-6 overflow-y-auto bg-gray-50/30">
+                {/* 左侧信息区 - 隐藏滚动条 */}
+                <div className="col-span-1 lg:col-span-1 p-6 overflow-y-auto no-scrollbar bg-gray-50/30">
                   <div className="space-y-6">
                     <div className="bg-white rounded-xl p-5 border border-gray-100 shadow-sm">
                       <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4 flex items-center">
                         <Globe size={14} className="mr-2" />
                         全局故事摘要
                       </h3>
-                      <div className="max-h-60 overflow-y-auto custom-scrollbar pr-2 text-sm text-gray-700 leading-relaxed font-serif">
+                      <div className="text-sm text-gray-700 leading-relaxed font-serif">
                         <MarkdownViewer content={currentArchive.globalSummary} compact />
                       </div>
                     </div>
@@ -2076,23 +2088,23 @@ export default function App() {
                         <FileText size={14} className="mr-2" />
                         本章摘要
                       </h3>
-                      <div className="max-h-60 overflow-y-auto custom-scrollbar pr-2 text-sm text-gray-700 leading-relaxed font-serif">
+                      <div className="text-sm text-gray-700 leading-relaxed font-serif">
                         <MarkdownViewer content={currentArchive.chapterSummary} compact />
                       </div>
                     </div>
                   </div>
                 </div>
 
-                {/* 右侧角色状态区 */}
-                <div className="col-span-1 lg:col-span-2 p-8 min-h-full overflow-y-auto bg-white">
+                {/* 右侧角色状态区 - 隐藏滚动条 */}
+                <div className="col-span-1 lg:col-span-2 p-8 min-h-full overflow-y-auto no-scrollbar bg-white">
                   <div className="mb-6 pb-4 border-b border-gray-100">
                     <h3 className="text-sm font-bold text-gray-900 uppercase tracking-widest flex items-center">
                       <Users size={16} className="mr-2" />
                       角色状态档案
                     </h3>
                   </div>
-                  <div className="text-gray-800 font-serif leading-relaxed">
-                    <MarkdownViewer content={currentArchive.characterState} />
+                  <div className="text-sm text-gray-700 font-serif leading-relaxed">
+                    <MarkdownViewer content={currentArchive.characterState} compact />
                   </div>
                 </div>
               </div>
@@ -2131,137 +2143,153 @@ export default function App() {
     }
 
     return (
-      <div className="flex flex-col space-y-6">
-        {/* Action Bar */}
-        <div className="flex flex-wrap justify-between items-center gap-3 bg-white px-4 py-3 rounded-xl border border-gray-100 shadow-sm">
-          {/* 左侧：标题 */}
-          <h2 className="text-lg font-serif font-bold text-gray-900 flex items-center">
-            {React.createElement(STEPS[currentStep].icon, {
-              className: 'mr-2 text-gray-400',
-              size: 18,
-            })}
-            {STEPS[currentStep].title}
-          </h2>
+      <div className="flex flex-col h-full">
+        {/* 工具栏 - 编辑模式下隐藏 */}
+        {!isEditing && (
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 bg-white px-4 py-3 rounded-xl border border-gray-100 shadow-sm shrink-0 mb-6">
+            {/* 左侧：标题 */}
+            <h2 className="text-lg font-serif font-bold text-gray-900 flex items-center">
+              {React.createElement(STEPS[currentStep].icon, {
+                className: 'mr-2 text-gray-400',
+                size: 18,
+              })}
+              {STEPS[currentStep].title}
+            </h2>
 
-          {/* 中间：选择剧情结构按钮 */}
-          <div className="flex justify-center flex-1">
-            {currentStepId === 'plot' && (
-              <button
-                onClick={() => setShowPlotStructureModal(true)}
-                className="flex items-center px-3 py-1.5 bg-gray-50 hover:bg-white border border-gray-200 text-gray-700 rounded-lg transition-all hover:shadow-sm text-sm max-w-[160px] sm:max-w-[240px]"
-              >
-                <LayoutList size={14} className="mr-2 text-gray-500 shrink-0" />
-                <span className="truncate">结构: {selectedPlotStructure}</span>
-              </button>
-            )}
-          </div>
-
-          {/* 右侧：其他按钮组 */}
-          <div className="flex space-x-2 sm:space-x-3 flex-wrap justify-end w-auto">
-            {currentStepId === 'plot' && (
-              <button
-                onClick={handlePlotCritique}
-                disabled={isPlotCritiquing || !generatedData.plot}
-                className={`px-3 py-1.5 bg-white border border-gray-200 text-stone-700 hover:bg-gray-50 hover:border-gray-300 rounded-lg flex items-center transition-all ${
-                  isPlotCritiquing || !generatedData.plot
-                    ? 'opacity-50 cursor-not-allowed'
-                    : 'shadow-sm'
-                } min-h-[36px] justify-center font-serif text-sm font-medium`}
-              >
-                {isPlotCritiquing ? (
-                  <RefreshCw size={14} className="mr-2 animate-spin" />
-                ) : (
-                  <Activity size={14} className="mr-2" />
-                )}
-                {isPlotCritiquing ? '诊疗中...' : '深度问诊'}
-              </button>
-            )}
-            {content && !isEditing && (
-              <>
-                {currentStepId === 'characters' && (
-                  <button
-                    onClick={() => setIsNameModalOpen(true)}
-                    className="flex items-center px-3 py-1.5 bg-white hover:bg-stone-50 text-stone-700 rounded-lg transition-colors border border-gray-200 min-h-[36px] justify-center shadow-sm font-serif text-sm font-medium"
-                  >
-                    <Users size={14} className="mr-2" /> 角色管理
-                  </button>
-                )}
+            {/* 中间：选择剧情结构按钮 */}
+            <div className="flex justify-start sm:justify-center flex-1">
+              {currentStepId === 'plot' && (
                 <button
-                  onClick={handleStartEdit}
-                  className="flex items-center px-3 py-1.5 bg-white hover:bg-gray-50 text-stone-700 rounded-lg transition-colors border border-gray-200 min-h-[36px] justify-center shadow-sm font-serif text-sm font-medium"
+                  onClick={() => setShowPlotStructureModal(true)}
+                  className="flex items-center px-3 py-1.5 bg-gray-50 hover:bg-white border border-gray-200 text-gray-700 rounded-lg transition-all hover:shadow-sm text-sm max-w-[160px] sm:max-w-[240px]"
                 >
-                  <PenTool size={14} className="mr-2" /> 编辑
+                  <LayoutList size={14} className="mr-2 text-gray-500 shrink-0" />
+                  <span className="truncate">结构: {selectedPlotStructure}</span>
                 </button>
-                <button
-                  onClick={() =>
-                    openCustomModal(STEPS[currentStep].title, (val) =>
-                      handleGenerateStep(currentStepId, val)
-                    )
-                  }
-                  className="flex items-center px-3 py-1.5 bg-white hover:bg-gray-50 text-stone-700 rounded-lg transition-colors border border-gray-200 min-h-[36px] justify-center shadow-sm font-serif text-sm font-medium"
-                >
-                  <MessageSquare size={14} className="mr-2" /> 提意见
-                </button>
-              </>
-            )}
-
-            <button
-              onClick={() => handleGenerateStep(currentStepId)}
-              disabled={isGenerating}
-              className={`flex items-center px-4 py-1.5 bg-white hover:bg-gray-50 text-stone-900 border border-gray-200 hover:border-gray-400 font-serif font-medium rounded-lg transition-all ${
-                isGenerating ? 'opacity-50 cursor-not-allowed' : 'shadow-sm hover:shadow'
-              } min-h-[36px] justify-center text-sm`}
-            >
-              {isGenerating ? (
-                <RefreshCw className="animate-spin mr-2" size={14} />
-              ) : (
-                <Sparkles className="mr-2" size={14} />
               )}
-              {content ? '重新生成' : '立即生成'}
-            </button>
-          </div>
-        </div>
-
-        {/* Content Area */}
-        <div className="bg-white border border-gray-100 rounded-xl p-6 sm:p-10 shadow-sm min-h-[600px] relative">
-          {isGenerating ? (
-            <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/90 z-10">
-              <RefreshCw className="animate-spin w-10 h-10 text-gray-900 mb-6" />
-              <p className="text-gray-500 font-serif italic text-lg animate-pulse text-center px-4">
-                {loadingMessage || 'AI 正在深度思考构建中...'}
-              </p>
             </div>
-          ) : isEditing ? (
+
+            {/* 右侧：其他按钮组 */}
+            <div className="flex flex-wrap gap-2 justify-start sm:justify-end w-full sm:w-auto">
+              {currentStepId === 'plot' && (
+                <button
+                  onClick={handlePlotCritique}
+                  disabled={isPlotCritiquing || !generatedData.plot}
+                  className={`px-2 sm:px-3 py-1.5 bg-white border border-gray-200 text-stone-700 hover:bg-gray-50 hover:border-gray-300 rounded-lg flex items-center transition-all ${
+                    isPlotCritiquing || !generatedData.plot
+                      ? 'opacity-50 cursor-not-allowed'
+                      : 'shadow-sm'
+                  } min-h-[36px] justify-center font-serif text-sm font-medium`}
+                  title={isPlotCritiquing ? '诊疗中...' : '深度问诊'}
+                >
+                  {isPlotCritiquing ? (
+                    <RefreshCw size={14} className="sm:mr-2 animate-spin" />
+                  ) : (
+                    <Activity size={14} className="sm:mr-2" />
+                  )}
+                  <span className="hidden sm:inline">
+                    {isPlotCritiquing ? '诊疗中...' : '深度问诊'}
+                  </span>
+                </button>
+              )}
+              {content && !isEditing && (
+                <>
+                  {currentStepId === 'characters' && (
+                    <button
+                      onClick={() => setIsNameModalOpen(true)}
+                      className="flex items-center px-2 sm:px-3 py-1.5 bg-white hover:bg-stone-50 text-stone-700 rounded-lg transition-colors border border-gray-200 min-h-[36px] justify-center shadow-sm font-serif text-sm font-medium"
+                      title="角色管理"
+                    >
+                      <Users size={14} className="sm:mr-2" />
+                      <span className="hidden sm:inline">角色管理</span>
+                    </button>
+                  )}
+                  <button
+                    onClick={handleStartEdit}
+                    className="flex items-center px-2 sm:px-3 py-1.5 bg-white hover:bg-gray-50 text-stone-700 rounded-lg transition-colors border border-gray-200 min-h-[36px] justify-center shadow-sm font-serif text-sm font-medium"
+                    title="编辑"
+                  >
+                    <PenTool size={14} className="sm:mr-2" />
+                    <span className="hidden sm:inline">编辑</span>
+                  </button>
+                  <button
+                    onClick={() =>
+                      openCustomModal(STEPS[currentStep].title, (val) =>
+                        handleGenerateStep(currentStepId, val)
+                      )
+                    }
+                    className="flex items-center px-2 sm:px-3 py-1.5 bg-white hover:bg-gray-50 text-stone-700 rounded-lg transition-colors border border-gray-200 min-h-[36px] justify-center shadow-sm font-serif text-sm font-medium"
+                    title="提意见"
+                  >
+                    <MessageSquare size={14} className="sm:mr-2" />
+                    <span className="hidden sm:inline">提意见</span>
+                  </button>
+                </>
+              )}
+
+              <button
+                onClick={() => handleGenerateStep(currentStepId)}
+                disabled={isGenerating}
+                className={`flex items-center px-2 sm:px-4 py-1.5 bg-white hover:bg-gray-50 text-stone-900 border border-gray-200 hover:border-gray-400 font-serif font-medium rounded-lg transition-all ${
+                  isGenerating ? 'opacity-50 cursor-not-allowed' : 'shadow-sm hover:shadow'
+                } min-h-[36px] justify-center text-sm`}
+                title={content ? '重新生成' : '立即生成'}
+              >
+                {isGenerating ? (
+                  <RefreshCw className="animate-spin sm:mr-2" size={14} />
+                ) : (
+                  <Sparkles className="sm:mr-2" size={14} />
+                )}
+                <span className="hidden sm:inline">{content ? '重新生成' : '立即生成'}</span>
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Content Area - 编辑模式填满空间 */}
+        {isEditing ? (
+          <div className="flex-1 min-h-0">
             <MarkdownEditor
               initialContent={content as string}
               onSave={handleSaveContent}
               onCancel={handleCancelEdit}
             />
-          ) : content ? (
-            <div className="max-w-4xl mx-auto space-y-6">
-              <div className="flex justify-end mb-4 group opacity-0 hover:opacity-100 transition-opacity">
-                <button
-                  onClick={() => copyToClipboard(content as string)}
-                  className="text-gray-400 hover:text-gray-900 transition-colors p-2 rounded-lg hover:bg-gray-100"
-                  title="复制内容"
-                >
-                  <Copy size={16} />
-                </button>
+          </div>
+        ) : (
+          <div className="flex-1 min-h-0 bg-white border border-gray-100 rounded-xl p-4 sm:p-10 shadow-sm overflow-y-auto custom-scrollbar relative">
+            {isGenerating ? (
+              <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/90 z-10">
+                <RefreshCw className="animate-spin w-10 h-10 text-gray-900 mb-6" />
+                <p className="text-gray-500 font-serif italic text-lg animate-pulse text-center px-4">
+                  {loadingMessage || 'AI 正在深度思考构建中...'}
+                </p>
               </div>
-              <div className="prose prose-stone prose-lg max-w-none font-serif text-gray-800 leading-relaxed">
-                <MarkdownViewer content={cleanCodeBlock(content as string)} />
+            ) : content ? (
+              <div className="max-w-4xl mx-auto space-y-6">
+                <div className="flex justify-end mb-4 group opacity-0 hover:opacity-100 transition-opacity">
+                  <button
+                    onClick={() => copyToClipboard(content as string)}
+                    className="text-gray-400 hover:text-gray-900 transition-colors p-2 rounded-lg hover:bg-gray-100"
+                    title="复制内容"
+                  >
+                    <Copy size={16} />
+                  </button>
+                </div>
+                <div className="prose prose-stone prose-lg max-w-none font-serif text-gray-800 leading-relaxed">
+                  <MarkdownViewer content={cleanCodeBlock(content as string)} />
+                </div>
               </div>
-            </div>
-          ) : (
-            <div className="h-full flex flex-col items-center justify-center text-gray-300 py-20">
-              <BookOpen size={64} className="mb-6 opacity-30" />
-              <p className="font-serif text-xl">点击上方“生成”按钮开始构建</p>
-            </div>
-          )}
-        </div>
+            ) : (
+              <div className="h-full flex flex-col items-center justify-center text-gray-300 py-20">
+                <BookOpen size={64} className="mb-6 opacity-30" />
+                <p className="font-serif text-xl">点击上方"生成"按钮开始构建</p>
+              </div>
+            )}
+          </div>
+        )}
 
-        {/* Next Step Button */}
-        {currentStep < STEPS.length - 1 && content && (
+        {/* Next Step Button - 编辑模式下隐藏 */}
+        {currentStep < STEPS.length - 1 && content && !isEditing && (
           <div className="flex justify-center p-8">
             <button
               onClick={() => setCurrentStep(currentStep + 1)}
@@ -2361,10 +2389,31 @@ export default function App() {
 
       {/* Sidebar - Minimalist White Design */}
       <div
-        className={`w-56 sm:w-64 bg-white border-r border-gray-100 flex flex-col fixed inset-y-0 left-0 z-20 transform transition-transform duration-300 md:static md:translate-x-0 md:transform-none ${
+        className={`w-56 sm:w-64 bg-white border-r border-gray-100 flex flex-col fixed inset-y-0 left-0 z-50 transform transition-transform duration-300 md:static md:translate-x-0 md:transform-none ${
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        } md:flex shadow-sm sidebar-desktop-visible`}
+        } md:flex shadow-xl md:shadow-sm sidebar-desktop-visible`}
       >
+        {/* Mobile Close Button inside Sidebar */}
+        <button
+          onClick={() => setIsSidebarOpen(false)}
+          className="md:hidden absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-900 transition-colors"
+          title="关闭侧边栏"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
         <div className="p-8 border-b border-gray-100 flex flex-col items-center">
           <img
             src="/favicon.png"
@@ -2393,7 +2442,10 @@ export default function App() {
                   ? !!generatedData[step.id as keyof GeneratedData]
                   : false
               }
-              onClick={() => setCurrentStep(idx)}
+              onClick={() => {
+                setCurrentStep(idx);
+                if (window.innerWidth < 768) setIsSidebarOpen(false);
+              }}
             />
           ))}
         </div>
@@ -2561,12 +2613,12 @@ export default function App() {
 
           {/* Content Area with Conditional Scrolling */}
           <div
-            className={`flex-1 min-h-0 w-full p-4 lg:p-10 pt-0 ${
-              ['writing', 'state'].includes(STEPS[currentStep].id)
-                ? 'overflow-hidden'
+            className={`w-full p-4 lg:p-10 pt-0 ${
+              ['writing', 'state'].includes(STEPS[currentStep].id) || isEditing
+                ? 'flex-1 min-h-0 overflow-hidden'
                 : STEPS[currentStep].id === 'init'
-                ? 'overflow-y-auto no-scrollbar'
-                : 'overflow-y-auto custom-scrollbar'
+                ? 'flex-1 min-h-0 overflow-y-auto no-scrollbar'
+                : 'flex-1 min-h-0 overflow-y-auto custom-scrollbar'
             }`}
           >
             {renderContent()}

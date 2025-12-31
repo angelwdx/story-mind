@@ -39,23 +39,23 @@ const icons = {
   success: CheckCircle2,
   error: XCircle,
   warning: AlertCircle,
-  info: Info
+  info: Info,
 };
 
-// 颜色映射
+// 颜色映射 - 简约黑白风格
 const colors = {
-  success: 'text-emerald-600',
-  error: 'text-red-600',
-  warning: 'text-amber-600',
-  info: 'text-blue-600'
+  success: 'text-gray-900',
+  error: 'text-gray-900',
+  warning: 'text-gray-900',
+  info: 'text-gray-900',
 };
 
-// 背景色映射
+// 背景色映射 - 简约黑白风格
 const bgColors = {
-  success: 'bg-emerald-50 border-emerald-100',
-  error: 'bg-red-50 border-red-100',
-  warning: 'bg-amber-50 border-amber-100',
-  info: 'bg-blue-50 border-blue-100'
+  success: 'bg-gray-100 border-gray-200',
+  error: 'bg-gray-100 border-gray-200',
+  warning: 'bg-gray-100 border-gray-200',
+  info: 'bg-gray-100 border-gray-200',
 };
 
 // 自定义弹窗组件
@@ -80,9 +80,9 @@ const CustomAlert: React.FC = () => {
 
   // 关闭弹窗
   const handleClose = () => {
-    setAlertState(prev => ({
+    setAlertState((prev) => ({
       ...prev,
-      isOpen: false
+      isOpen: false,
     }));
     // 如果是确认弹窗且未点击确认，则返回false
     if (alertState.resolve && alertState.options.cancelText) {
@@ -165,13 +165,7 @@ const CustomAlert: React.FC = () => {
                 )}
                 <button
                   onClick={handleConfirm}
-                  className={`px-4 py-2 text-white rounded-lg transition-all shadow-sm hover:shadow-md font-medium`}
-                  style={{
-                    backgroundColor: alertState.type === 'success' ? '#059669' :
-                      alertState.type === 'error' ? '#dc2626' :
-                        alertState.type === 'warning' ? '#d97706' :
-                          '#2563eb'
-                  }}
+                  className="px-4 py-2 bg-gray-900 hover:bg-gray-800 text-white rounded-lg transition-all shadow-sm hover:shadow-md font-medium"
                 >
                   {alertState.options.confirmText || '确认'}
                 </button>
@@ -190,7 +184,7 @@ export const AlertProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     message: '',
     type: 'info',
     options: {},
-    isOpen: false
+    isOpen: false,
   });
 
   // 显示信息弹窗
@@ -200,14 +194,18 @@ export const AlertProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       type,
       options: {
         duration: options.duration || 0, // 默认不自动关闭
-        ...options
+        ...options,
       },
-      isOpen: true
+      isOpen: true,
     });
   };
 
   // 显示确认弹窗
-  const showConfirm = (message: string, type: AlertType = 'warning', options: AlertOptions = {}): Promise<boolean> => {
+  const showConfirm = (
+    message: string,
+    type: AlertType = 'warning',
+    options: AlertOptions = {}
+  ): Promise<boolean> => {
     return new Promise((resolve) => {
       setAlertState({
         message,
@@ -216,10 +214,10 @@ export const AlertProvider: React.FC<{ children: ReactNode }> = ({ children }) =
           duration: 0, // 确认弹窗不自动关闭
           cancelText: '取消',
           confirmText: '确认',
-          ...options
+          ...options,
         },
         isOpen: true,
-        resolve
+        resolve,
       });
     });
   };
