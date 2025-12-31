@@ -34,3 +34,6 @@ dist-ssr
 .trae/
 
 dist-single
+
+# Build artifacts
+*.zip

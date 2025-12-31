@@ -102,6 +102,9 @@ const WritingStep: React.FC<Props> = ({
   const [humanizePrompt, setHumanizePrompt] = useState('');
   const [showHumanizeInput, setShowHumanizeInput] = useState(false);
 
+  // 本地编辑缓冲区
+  const [localContent, setLocalContent] = useState('');
+
   useEffect(() => {
     const existingTitle = generatedData.chapters[viewChapter - 1]?.title;
     const existingSummary = generatedData.chapters[viewChapter - 1]?.summary;
@@ -636,7 +639,7 @@ ${THEME_LIBRARY_CONTENT} `;
   return (
     <div className="flex flex-col h-full min-h-0 bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
       {/* Header */}
-      <div className="px-4 py-3 border-b border-gray-100 bg-white flex flex-wrap justify-between items-center gap-3 shrink-0">
+      <div className="px-2 sm:px-4 py-2 sm:py-3 border-b border-gray-100 bg-white flex flex-wrap justify-between items-center gap-2 sm:gap-3 shrink-0">
         <div className="flex items-center space-x-2 sm:space-x-3">
           <button
             onClick={() => setIsLeftPanelOpen(true)}
@@ -656,46 +659,49 @@ ${THEME_LIBRARY_CONTENT} `;
           >
             <ChevronLeft size={20} />
           </button>
-          <div className="flex flex-col">
-            <div className="flex items-center space-x-2 mb-1">
-              <span className="text-xs font-mono font-bold text-gray-900 bg-gray-100 border border-gray-200 px-2 py-0.5 rounded">
+          <div className="flex flex-col min-w-0">
+            <div className="flex items-center space-x-2 mb-0.5">
+              <span className="text-[10px] sm:text-xs font-mono font-bold text-gray-900 bg-gray-100 border border-gray-200 px-1.5 py-0.5 rounded shrink-0">
                 第 {viewChapter} 章
               </span>
               {!isTitleEditing && (
-                <span className="text-xs text-gray-500 truncate max-w-[150px] md:max-w-xs font-serif">
+                <span className="text-[10px] sm:text-xs text-gray-500 truncate max-w-[100px] sm:max-w-xs font-serif">
                   {chapterParams.role ? `定位: ${chapterParams.role} ` : ''}
                 </span>
               )}
             </div>
 
             {isTitleEditing ? (
-              <div className="flex items-center h-8">
+              <div className="flex items-center h-7 sm:h-8">
                 <input
                   value={tempTitle}
                   onChange={(e) => setTempTitle(e.target.value)}
-                  placeholder={`输入第${viewChapter}章标题...`}
-                  className="bg-gray-50 text-gray-900 text-sm px-2 py-1.5 rounded border border-gray-200 focus:border-black outline-none w-48 md:w-64 font-serif"
+                  placeholder={`标题...`}
+                  className="bg-gray-50 text-gray-900 text-xs sm:text-sm px-1.5 py-1 rounded border border-gray-200 focus:border-black outline-none w-32 sm:w-64 font-serif"
                   autoFocus
                 />
                 <button
                   onClick={handleTitleSave}
-                  className="ml-2 text-emerald-600 hover:text-emerald-700 p-2 hover:bg-emerald-50 rounded-lg transition-colors"
+                  className="ml-1 text-emerald-600 hover:text-emerald-700 p-1.5 hover:bg-emerald-50 rounded-lg transition-colors"
                   type="button"
                 >
-                  <Check size={16} />
+                  <Check size={14} />
                 </button>
               </div>
             ) : (
               <h2
-                className="font-bold text-base md:text-lg flex items-center cursor-pointer hover:text-gray-600 h-8 font-serif text-gray-900"
+                className="font-bold text-sm sm:text-lg flex items-center cursor-pointer hover:text-gray-600 h-7 sm:h-8 font-serif text-gray-900 truncate max-w-[120px] sm:max-w-none"
                 onClick={startEditing}
               >
                 {chapterParams.title === `第${viewChapter} 章` ? (
-                  <span className="text-gray-400 italic font-normal text-sm">点击输入标题...</span>
+                  <span className="text-gray-400 italic font-normal text-xs">点此输入标题</span>
                 ) : (
                   chapterParams.title
                 )}
-                <Edit size={12} className="ml-2 opacity-30 group-hover:opacity-100" />
+                <Edit
+                  size={10}
+                  className="ml-1.5 opacity-30 sm:opacity-0 group-hover:opacity-100"
+                />
               </h2>
             )}
           </div>
@@ -713,26 +719,52 @@ ${THEME_LIBRARY_CONTENT} `;
                 setIsEditMode(false);
               }
             }}
-            className="p-3 text-gray-400 hover:text-gray-900 disabled:opacity-30 rounded-lg hover:bg-gray-50 ml-2 min-w-[40px] flex items-center justify-center transition-colors"
+            className="p-2 sm:p-3 text-gray-400 hover:text-gray-900 disabled:opacity-30 rounded-lg hover:bg-gray-50 ml-1 min-w-[32px] sm:min-w-[40px] flex items-center justify-center transition-colors"
             type="button"
           >
-            <ChevronRight size={20} />
+            <ChevronRight size={18} />
           </button>
         </div>
 
-        <div className="flex items-center space-x-2 sm:space-x-3">
-          <button
-            onClick={() => setIsEditMode(!isEditMode)}
-            className={`p-3 rounded-lg transition-colors min-w-[40px] flex items-center justify-center border ${
-              isEditMode
-                ? 'bg-black text-white border-black shadow-md'
-                : 'bg-white hover:bg-gray-50 text-gray-400 hover:text-gray-600 border-gray-200'
-            } `}
-            title={isEditMode ? '切换到阅读模式' : '切换到编辑模式'}
-            type="button"
-          >
-            {isEditMode ? <Eye size={18} /> : <PenTool size={18} />}
-          </button>
+        <div className="flex items-center space-x-1.5 sm:space-x-3">
+          {isEditMode ? (
+            <>
+              <button
+                onClick={() => {
+                  setLocalContent(currentChapter?.content || '');
+                  setIsEditMode(false);
+                }}
+                className="p-2 sm:p-3 bg-white hover:bg-gray-50 text-stone-500 rounded-lg transition-colors border border-stone-200 min-w-[32px] sm:min-w-[40px] flex items-center justify-center"
+                title="取消编辑"
+                type="button"
+              >
+                <X size={16} />
+              </button>
+              <button
+                onClick={() => {
+                  onRewrite(viewChapter, localContent);
+                  setIsEditMode(false);
+                }}
+                className="p-2 sm:p-3 bg-stone-900 text-white hover:bg-stone-800 rounded-lg transition-all shadow-md min-w-[32px] sm:min-w-[40px] flex items-center justify-center border border-stone-900"
+                title="保存修改"
+                type="button"
+              >
+                <Check size={16} />
+              </button>
+            </>
+          ) : (
+            <button
+              onClick={() => {
+                setLocalContent(currentChapter?.content || '');
+                setIsEditMode(true);
+              }}
+              className="p-2 sm:p-3 rounded-lg transition-colors min-w-[32px] sm:min-w-[40px] flex items-center justify-center border bg-white hover:bg-gray-50 text-gray-400 hover:text-gray-600 border-gray-200"
+              title="编辑"
+              type="button"
+            >
+              <PenTool size={16} />
+            </button>
+          )}
 
           <button
             onClick={(e) => {
@@ -740,11 +772,11 @@ ${THEME_LIBRARY_CONTENT} `;
               onSyncContext(viewChapter);
             }}
             disabled={!currentChapter?.content || isGenerating || isSyncingContext}
-            className="p-3 bg-white hover:bg-gray-50 text-amber-600 hover:text-amber-700 rounded-lg transition-colors border border-amber-200 min-w-[40px] flex items-center justify-center"
-            title="状态更新"
+            className="p-2 sm:p-3 bg-white hover:bg-gray-50 text-amber-600 hover:text-amber-700 rounded-lg transition-colors border border-amber-200 min-w-[32px] sm:min-w-[40px] flex items-center justify-center"
+            title="同步状态"
             type="button"
           >
-            <Zap size={18} className={isSyncingContext ? 'animate-spin' : ''} />
+            <Zap size={16} className={isSyncingContext ? 'animate-spin' : ''} />
           </button>
 
           <button
@@ -753,21 +785,21 @@ ${THEME_LIBRARY_CONTENT} `;
               onGenerate(viewChapter, params, selectedTheme);
             }}
             disabled={isGenerating}
-            className="p-3 bg-white hover:bg-gray-50 text-gray-400 rounded-lg hover:text-gray-900 transition-colors border border-gray-200 min-w-[40px] flex items-center justify-center"
+            className="p-2 sm:p-3 bg-white hover:bg-gray-50 text-gray-400 rounded-lg hover:text-gray-900 transition-colors border border-gray-200 min-w-[32px] sm:min-w-[40px] flex items-center justify-center"
             title="重新生成"
             type="button"
           >
-            <RefreshCw size={18} className={isGenerating ? 'animate-spin' : ''} />
+            <RefreshCw size={16} className={isGenerating ? 'animate-spin' : ''} />
           </button>
 
           <button
             onClick={downloadChapter}
             disabled={!currentChapter?.content}
-            className="p-3 bg-white hover:bg-gray-50 text-gray-400 rounded-lg hover:text-gray-900 transition-colors border border-gray-200 min-w-[40px] flex items-center justify-center"
-            title="下载章节"
+            className="p-2 sm:p-3 bg-white hover:bg-gray-50 text-gray-400 rounded-lg hover:text-gray-900 transition-colors border border-gray-200 min-w-[32px] sm:min-w-[40px] flex items-center justify-center"
+            title="下载"
             type="button"
           >
-            <Download size={18} />
+            <Download size={16} />
           </button>
         </div>
       </div>
@@ -895,8 +927,8 @@ ${THEME_LIBRARY_CONTENT} `;
               {isEditMode ? (
                 <textarea
                   className="w-full flex-1 bg-transparent text-gray-800 leading-loose resize-none outline-none font-serif text-lg py-12 px-8 md:px-[calc(50%-20rem)] lg:px-[calc(50%-24rem)] border-none focus:ring-0 block custom-scrollbar placeholder-gray-300"
-                  value={currentChapter.content}
-                  onChange={(e) => onRewrite(viewChapter, e.target.value)}
+                  value={localContent}
+                  onChange={(e) => setLocalContent(e.target.value)}
                   placeholder="在此开始创作..."
                   autoFocus
                 />
@@ -922,7 +954,7 @@ ${THEME_LIBRARY_CONTENT} `;
 
         {/* Right Tools Panel - Mobile Responsive */}
         <div
-          className={`w-full lg:w-80 bg-white border-l border-gray-100 flex flex-col shrink-0 h-full min-h-0 lg:flex fixed lg:relative top-0 right-0 z-20 transform transition-transform duration-300 ease-in-out ${
+          className={`w-[85%] sm:w-80 bg-white border-l border-gray-100 flex flex-col shrink-0 h-full min-h-0 lg:flex fixed lg:relative top-0 right-0 z-50 transform transition-transform duration-300 ease-in-out ${
             isRightPanelOpen ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'
           }`}
         >
@@ -1147,6 +1179,17 @@ ${THEME_LIBRARY_CONTENT} `;
                     </div>
                   </div>
                 )}
+              </div>
+
+              {/* Mobile Close Button at Bottom */}
+              <div className="lg:hidden p-4 pt-0">
+                <button
+                  onClick={() => setIsRightPanelOpen(false)}
+                  className="w-full py-3 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-lg text-sm font-bold transition-colors flex items-center justify-center gap-2"
+                >
+                  <ChevronRight size={18} />
+                  收起工具箱
+                </button>
               </div>
             </div>
           </div>
